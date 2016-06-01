@@ -28,6 +28,18 @@ class zoteroThemeHooks implements Gdn_IPlugin {
         return true;
         */
     }
+
+    public function logModel_AfterRestore_handler($sender, $args){
+        //$a = print_r($args, true);
+        //error_log($a);
+        if($args['Log']['Operation'] == 'Pending'){
+            if($args['Log']['RecordType'] == 'Discussion' || $args['Log']['RecordType'] == 'Comment'){
+                $userID = $args['Log']['InsertUserID'];
+                error_log("setting Verified on {$userID} to 1");
+                Gdn::userModel()->setField($userID, 'Verified', 1);
+            }
+        }
+    }
 }
 
 
