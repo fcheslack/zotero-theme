@@ -180,11 +180,14 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
                         <li><a href="<?=$forumNotificationPrefs?>">Notification Preferences</a></li>
                     <?endif;?>
                     <?if($userIsAdmin):?>
-                        <li><a href="/settings">Forum Settings</a></li>
+                        <li><a href="/dashboard/settings">Forum Settings</a></li>
                     <?endif;?>
                     <?if($userIsAdmin || $userIsModerator):?>
                         <?$pendingCount = getPendingPostCount();?>
                         <li><a href="/dashboard/log/moderation">Moderation Queue (<?=$pendingCount?>)</a></li>
+                        <?if (c('Garden.Email.Disabled')):?>
+                            <li>Email is disabled</li>
+                        <?endif;?>
                     <?endif;?>
                   </ul>
               </div>
