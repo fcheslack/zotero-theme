@@ -183,7 +183,8 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
                         <li><a href="/settings">Forum Settings</a></li>
                     <?endif;?>
                     <?if($userIsAdmin || $userIsModerator):?>
-                        <li><a href="/dashboard/log/moderation">Moderation Queue</a></li>
+                        <?$pendingCount = getPendingPostCount();?>
+                        <li><a href="/dashboard/log/moderation">Moderation Queue (<?=$pendingCount?>)</a></li>
                     <?endif;?>
                   </ul>
               </div>

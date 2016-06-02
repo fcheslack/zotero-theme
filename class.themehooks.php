@@ -1,11 +1,5 @@
 <?php
 /**
- * @author    My Name <name@email.com>
- * @copyright 2015 (c) My Organizations
- * @license   http://opensource.org/licenses/MIT MIT
- */
-
-/**
  * Sets config variables on enabling MyThemeName, adds locale data to the view,
  * and adds a respond button to the discussion page.
  */
@@ -42,6 +36,12 @@ class zoteroThemeHooks implements Gdn_IPlugin {
     }
 }
 
+function getPendingPostCount(){
+    $logModel = new LogModel();
+    //$count = $logModel->getCountWhere("Operation = 'Pending' AND (RecordType = 'Discussion' OR RecordType = 'Comment')");
+    $count = $logModel->getCountWhere(['Operation'=>'Pending', 'RecordType'=>['Discussion', 'Comment']]);
+    return $count;
+}
 
 /**
  * Output comment form.
