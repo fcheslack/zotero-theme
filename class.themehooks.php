@@ -12,15 +12,10 @@ class zoteroThemeHooks implements Gdn_IPlugin {
      * @return boolean Whether setup was successful.
      */
     public function setup() {
-        // Set some config settings for a modern layout with top-level categories displayed as headings.
-        /*
-        saveToConfig(array(
-            'Vanilla.Discussions.Layout'     => 'modern',
-            'Vanilla.Categories.Layout'      => 'modern',
-            'Vanilla.Categories.DoHeadings'  => true,
-            ), null, true);
-        return true;
-        */
+    }
+
+    public function LogController_Render_Before($Sender, $args){
+        $Sender->AddJsFile('moderation.js', 'themes/zotero-default');
     }
 
     public function logModel_AfterRestore_handler($sender, $args){
