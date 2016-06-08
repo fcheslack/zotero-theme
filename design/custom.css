@@ -768,6 +768,10 @@ li.ItemDiscussion.Read {
     background: #fffeec;
 }
 
+.ItemDiscussion .Message {
+    font-size: 100%;
+}
+
 a.NewDiscussion {
     color:#fff !important;
     background: #900;
