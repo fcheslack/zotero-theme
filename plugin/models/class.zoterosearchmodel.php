@@ -17,7 +17,7 @@ class ZoteroSearchModel extends SearchModel {
      * @throws Exception
      */
     public function search($Search, $Offset = 0, $Limit = 20) {
-        error_log("ZoteroSearchModel.search");
+        //error_log("ZoteroSearchModel.search");
         // If there are no searches then return an empty array.
         if (trim($Search) == '') {
             return array();
@@ -85,7 +85,7 @@ class ZoteroSearchModel extends SearchModel {
         $this->reset();
         $this->SQL->reset();
         $Result = $this->Database->query($Sql, $Parameters)->resultArray();
-        error_log($Sql);
+        //error_log($Sql);
         foreach ($Result as $Key => $Value) {
             if (isset($Value['Summary'])) {
                 $Value['Summary'] = Condense(Gdn_Format::to($Value['Summary'], $Value['Format']));

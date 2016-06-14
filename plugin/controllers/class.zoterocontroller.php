@@ -22,7 +22,7 @@ class ZoteroController extends Gdn_Controller {
     }
 
     public function index() {
-        error_log('ZoteroController index');
+        //error_log('ZoteroController index');
         return;
     }
 
@@ -36,7 +36,7 @@ class ZoteroController extends Gdn_Controller {
      * @param type $LogIDs
      */
     protected function deleteAndBan($LogIDs) {
-        error_log('deleteAndBan');
+        //error_log('deleteAndBan');
         $this->permission(array('Garden.Moderation.Manage', 'Moderation.Spam.Manage'), false);
 
         if (!$this->Request->isPostBack()) {

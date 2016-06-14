@@ -843,3 +843,13 @@ div.editor-help-text {
 div.editor-toolbar a span {
     display:none;
 }
+
+div.InformWrapper.ModerationPending {
+    position:fixed;
+    top:50%;
+    left:50%;
+    margin-top: -50px;
+    margin-left: -175px;
+
+    padding:15px;
+}

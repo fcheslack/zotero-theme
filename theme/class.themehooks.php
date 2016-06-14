@@ -24,9 +24,72 @@ class zoteroThemeHooks implements Gdn_IPlugin {
         if($args['Log']['Operation'] == 'Pending'){
             if($args['Log']['RecordType'] == 'Discussion' || $args['Log']['RecordType'] == 'Comment'){
                 $userID = $args['Log']['InsertUserID'];
-                error_log("setting Verified on {$userID} to 1");
                 Gdn::userModel()->setField($userID, 'Verified', 1);
             }
+        }
+    }
+
+    //when a post goes to moderation after the queue was previously empty, send notifications
+    //to moderators
+    public function logModel_AfterInsert_handler($Sender, $args){
+        $count = getPendingPostCount();
+        if($count == 1){
+            //get moderator users
+            $moderators = Gdn::userModel()->getByRole('Moderator')->resultArray();
+            $admins = Gdn::userModel()->getByRole('Administrator')->resultArray();
+
+            $modUsers = array_merge($admins, $moderators);
+
+            foreach($modUsers as $user){
+                Gdn::userModel()->setCalculatedFields($user);
+                $Preferences = val('Preferences', $user);
+                //$moderationEmail = arrayValue('Email.Moderation', $Preferences, Gdn::config('Preferences.Email.Moderation'));
+                $moderationEmail = arrayValue('Email.Moderation', $Preferences, false);
+                if($moderationEmail){
+                    $Email = new Gdn_Email();
+                    $Email->subject('Moderation pending on Zotero forums');
+                    $Email->to($user);
+                    
+                    $Message = sprintf(
+                        $Story == '' ? t('EmailNotification', "%1\$s\n\n%2\$s") : t('EmailStoryNotification', "%3\$s\n\n%2\$s"),
+                        $ActivityHeadline,
+                        ExternalUrl($Activity->Route == '' ? '/' : $Activity->Route),
+                        $Story
+                    );
+                    $Email->message('A new post is awaiting moderator approval on the Zotero forums.');
+
+                    try {
+                        $Email->send();
+                    } catch (phpmailerException $pex) {
+                        if ($pex->getCode() == PHPMailer::STOP_CRITICAL) {
+                            error_log('Failure sending moderation email');
+                        } else {
+                            error_log('Error sending moderation email');
+                        }
+                    } catch (Exception $ex) {
+                        error_log('Failure sending moderation email');
+                    }
+                }
+            }
+        }
+    }
+
+    public function discussionController_BeforeCommentRender_handler($Sender, $args) {
+        //if the comment has gone to moderation, it hasn't been created as an actual comment yet, only an
+        //activity log, so the event arguments will not have 'Comment' set.
+        if(!isset($args['Comment'])){
+            $msg = '<p>All new user posts are moderated. Your message will appear after it has been approved</p>';
+            $msg .= '<p><a href="/discussions">Return to discussions</a></p>';
+            $Sender->InformMessage($msg, 'ModerationPending');
+        }
+    }
+
+    /**
+     * Let users with permission choose to receive Moderation notification emails.
+     */
+    public function profileController_afterPreferencesDefined_handler($Sender) {
+        if (Gdn::session()->checkPermission('Garden.Moderation.Manage')) {
+            $Sender->Preferences['Notifications']['Email.Moderation'] = t('Notify me when moderation is required.');
         }
     }
 }
