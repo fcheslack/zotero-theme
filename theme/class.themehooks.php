@@ -78,7 +78,7 @@ class zoteroThemeHooks implements Gdn_IPlugin {
         //if the comment has gone to moderation, it hasn't been created as an actual comment yet, only an
         //activity log, so the event arguments will not have 'Comment' set.
         if(!isset($args['Comment'])){
-            $msg = '<p>All new user posts are moderated. Your message will appear after it has been approved.</p>';
+            $msg = '<p>Posts from new users are moderated. Your message will appear after it has been approved.</p>';
             $msg .= '<p><a href="/discussions">Return to discussions</a></p>';
             $Sender->InformMessage($msg, 'ModerationPending');
         }
