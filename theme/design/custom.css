@@ -798,9 +798,10 @@ div.BoxFilter ul {
 }
 
 blockquote {
-    background:#fffeec;
-    border: 1px dashed #777;
+    border-left: 3px solid #b1daea;
+    margin: 15px 5px;
     padding: 6px;
+    padding-left: 10px;
 }
 
 div.DataBox.DataBox-Comments {
