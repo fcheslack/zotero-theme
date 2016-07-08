@@ -49,13 +49,6 @@ class zoteroThemeHooks implements Gdn_IPlugin {
                     $Email = new Gdn_Email();
                     $Email->subject('Moderation pending on Zotero forums');
                     $Email->to($user);
-                    
-                    $Message = sprintf(
-                        $Story == '' ? t('EmailNotification', "%1\$s\n\n%2\$s") : t('EmailStoryNotification', "%3\$s\n\n%2\$s"),
-                        $ActivityHeadline,
-                        ExternalUrl($Activity->Route == '' ? '/' : $Activity->Route),
-                        $Story
-                    );
                     $Email->message('A new post is awaiting moderator approval on the Zotero forums.');
 
                     try {
@@ -148,6 +141,16 @@ if (!function_exists('WriteCommentForm')){
 
         if (($Discussion->Closed == '1' && $UserCanClose) || ($Discussion->Closed == '0' && $UserCanComment))
             echo $Controller->fetchView('comment', 'post', 'vanilla');
+    }
+}
+
+if (!function_exists('ipanchor')){
+    function ipAnchor($IP, $CssClass = '') {
+        if ($IP) {
+            return htmlspecialchars($IP);
+        } else {
+            return $IP;
+        }
     }
 }
 
