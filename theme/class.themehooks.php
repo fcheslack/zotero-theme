@@ -14,6 +14,15 @@ class zoteroThemeHooks implements Gdn_IPlugin {
     public function setup() {
     }
 
+    public function base_render_before($Sender){
+        unset($Sender->Assets['Panel']['GuestModule']);
+        unset($Sender->Assets['Panel']['SignedInModule']);
+        unset($Sender->Assets['Panel']['DiscussionFilterModule']);
+        unset($Sender->Assets['Panel']['NewDiscussionModule']);
+        unset($Sender->Assets['Panel']['CategoriesModule']);
+        unset($Sender->Assets['Panel']['BookmarkedModule']);
+    }
+
     public function LogController_Render_Before($Sender, $args){
         $Sender->AddJsFile('moderation.js', 'themes/zotero-default');
     }

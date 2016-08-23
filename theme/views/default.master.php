@@ -59,6 +59,7 @@ $userIsAdmin = false;
 $userIsModerator = false;
 $UserID = Gdn::Controller()->Data('Profile.UserID', Gdn::Session()->UserID);
 $User = Gdn::UserModel()->GetID($UserID);
+$CountUnread = $User->CountUnreadConversations;
 $Roles = Gdn::UserModel()->GetRoles($UserID)->ResultArray();
 foreach($Roles as $role){
     if($role['Name'] == 'Administrator'){
@@ -126,7 +127,7 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
             <? if ($userInfo): ?>
                 Welcome, <a href="<?=$profileUrl($userInfo['slug']);?>"><?=htmlspecialchars($displayName)?></a>
                 <a href="<?=$settingsUrl?>">Settings</a>
-                <a href="<?=$inboxUrl?>">Inbox</a>
+                <a href="<?=$inboxUrl?>">Inbox<?=$CountUnread > 0 ? " ($CountUnread)" : "";?></a>
                 <a href="<?=$downloadUrl?>">Download</a>
                 <a href="<?=$logoutUrl?>">Log Out</a>
             <? else: ?>
@@ -166,10 +167,10 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
           <div class="row">
 
             <aside class="page-sidebar minor-col" style="float:left" role="complementary">
-              <?//$this->RenderAsset('Panel')?>
               <div class="BoxButtons BoxNewDiscussion">
                   <a href="/post/discussion" class="Button Primary Action NewDiscussion BigButton">New Discussion</a>
               </div>
+              
               <h2>Quick Links</h2>
               <div class="BoxFilter BoxQuickLinksFilter">
                   <ul class="FilterMenu">
@@ -202,6 +203,7 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
                       </ul>
                   </div>
               <?endif;?>
+              <?$this->RenderAsset('Panel')?>
               <!--{asset name="Panel"}-->
             </aside>
 

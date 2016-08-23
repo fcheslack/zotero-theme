@@ -816,6 +816,10 @@ div.BoxFilter.BoxQuickLinksFilter {
     border-top: 1px solid rgba(0,0,0,0.1);
 }
 
+div.BoxFilter.BoxDiscussionFilter {
+    margin-bottom:10px;
+}
+
 #content a.Button {
     color: black;
     font-weight: normal;
@@ -854,3 +858,5 @@ div.InformWrapper.ModerationPending {
 
     padding:15px;
 }
+
+div.
