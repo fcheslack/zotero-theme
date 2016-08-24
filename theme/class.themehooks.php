@@ -27,9 +27,15 @@ class zoteroThemeHooks implements Gdn_IPlugin {
         $Sender->AddJsFile('moderation.js', 'themes/zotero-default');
     }
 
+    public function PostController_Render_Before($Sender, $args){
+        $Sender->AddJsFile('posthelp.js', 'themes/zotero-default');
+    }
+
+    public function PostController_BeforeFormInputs_handler($Sender, $args){
+        echo '<div id="SuggestedReading" style="display:none;"><p>You may want to read:</p><ul id="suggestedReadingList"></ul></div>';
+    }
+
     public function logModel_AfterRestore_handler($sender, $args){
-        //$a = print_r($args, true);
-        //error_log($a);
         if($args['Log']['Operation'] == 'Pending'){
             if($args['Log']['RecordType'] == 'Discussion' || $args['Log']['RecordType'] == 'Comment'){
                 $userID = $args['Log']['InsertUserID'];
@@ -52,7 +58,6 @@ class zoteroThemeHooks implements Gdn_IPlugin {
             foreach($modUsers as $user){
                 Gdn::userModel()->setCalculatedFields($user);
                 $Preferences = val('Preferences', $user);
-                //$moderationEmail = arrayValue('Email.Moderation', $Preferences, Gdn::config('Preferences.Email.Moderation'));
                 $moderationEmail = arrayValue('Email.Moderation', $Preferences, false);
                 if($moderationEmail){
                     $Email = new Gdn_Email();
