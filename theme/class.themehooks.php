@@ -28,7 +28,7 @@ class zoteroThemeHooks implements Gdn_IPlugin {
     }
 
     public function PostController_Render_Before($Sender, $args){
-        $Sender->AddJsFile('posthelp.js', 'themes/zotero-default');
+        //$Sender->AddJsFile('posthelp.js', 'themes/zotero-default');
     }
 
     public function PostController_BeforeFormInputs_handler($Sender, $args){
