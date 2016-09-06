@@ -837,7 +837,7 @@ div.BoxFilter.BoxDiscussionFilter {
 .AdminCheck input {
     display:inline;
 }
-
+/*
 div.editor {
     display:none !important;
 }
@@ -848,7 +848,7 @@ div.editor-help-text {
 div.editor-toolbar a span {
     display:none;
 }
-
+*/
 div.InformWrapper.ModerationPending {
     position:fixed;
     top:50%;
@@ -858,5 +858,3 @@ div.InformWrapper.ModerationPending {
 
     padding:15px;
 }
-
-div.

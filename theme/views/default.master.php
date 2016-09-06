@@ -97,8 +97,6 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
         <!--<link rel="stylesheet" href="<?=$staticUrl("/css/style_reduced.css")?>" type="text/css" media="screen" charset="utf-8"/>-->
         <link rel="stylesheet" href="<?=$staticUrl("/css/zotero_icons_sprite.css")?>" type="text/css" media="screen" charset="utf-8"/>
         <!--<link rel="stylesheet" href="<?=$staticUrl('/css/zorg_style.css');?>" type="text/css" media="screen" charset="utf-8"/> -->
-        <link href="/themes/zotero-bootstrap/fonts/glyphicons.css" rel="stylesheet">
-        <link href="<?=$staticUrl('/fonts/glyphicons_halflings/css/glyphicons-halflings.css')?>" rel="stylesheet">
         
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
