@@ -68,6 +68,9 @@ foreach($Roles as $role){
         $userIsModerator = true;
     }
 }
+if(count($Roles) == 0){
+    $userInfo = false;
+}
 
 $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userInfo['slug']}";
 
@@ -139,7 +142,7 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
         <div id="navbar" class="container">
             <nav id="sitenav">
                 <ul>
-                <li ><a href="/">Home</a></li>
+                <li ><a href="<?=$baseUrl?>">Home</a></li>
                 <? if ($userInfo): ?>
                 <li ><a href="<?=$libraryUrl($userInfo['slug'])?>">My Library</a></li>
                 <?php endif; ?>
