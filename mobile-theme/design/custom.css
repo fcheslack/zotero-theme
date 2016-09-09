@@ -23,6 +23,13 @@ a:active {color: #333;}
 
 }
 
+#content .Pager a.Highlight {
+    color:#000;
+}
+div.DataBox.DataBox-Comments {
+    clear:both;
+}
+
 /* == Footer == */
 footer .center {
     background: #555;
