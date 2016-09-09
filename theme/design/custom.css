@@ -573,6 +573,10 @@ header .center {
     font-size:0.857142857em;
 }
 
+#content .Pager a.Highlight {
+    color:#000;
+}
+
 /* == Footer == */
 footer .center {
     background: #555;

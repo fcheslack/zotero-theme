@@ -47,6 +47,7 @@ class zoteroThemeHooks implements Gdn_IPlugin {
     //when a post goes to moderation after the queue was previously empty, send notifications
     //to moderators
     public function logModel_AfterInsert_handler($Sender, $args){
+        return;
         $count = getPendingPostCount();
         if($count == 1){
             //get moderator users
@@ -280,6 +281,37 @@ if (!function_exists('WriteDiscussion')):
 endif;
 
 // ==== Begin Custom Date Formatting Functions ====
+function SecondsOffset() {
+    // Alter the timestamp based on the user's hour offset
+    $Session = Gdn::session();
+    $HourOffset = 0;
+
+    if ($Session->UserID > 0) {
+        $HourOffset = $Session->User->HourOffset;
+    } elseif (class_exists('DateTimeZone')) {
+        if (!isset($GuestHourOffset)) {
+            $GuestTimeZone = c('Garden.GuestTimeZone');
+            if ($GuestTimeZone) {
+                try {
+                    $TimeZone = new DateTimeZone($GuestTimeZone);
+                    $Offset = $TimeZone->getOffset(new DateTime('now', new DateTimeZone('UTC')));
+                    $GuestHourOffset = floor($Offset / 3600);
+                } catch (Exception $Ex) {
+                    $GuestHourOffset = 0;
+                    // Do nothing, but don't set the timezone.
+                    logException($Ex);
+                }
+            }
+        }
+        $HourOffset = $GuestHourOffset;
+    }
+
+    if ($HourOffset <> 0) {
+        return $HourOffset * 3600;
+    }
+
+    return 0;
+}
 /**
  * Show times relative to now
  *
@@ -291,9 +323,10 @@ endif;
  * @return string
  */
 function ZoteroRelativeTime($Timestamp = null) {
-    $time = $Timestamp;
+    $secondsOffset = SecondsOffset();
+    $time = $Timestamp + $secondsOffset;
+    $NOW = time() + $secondsOffset;
 
-    $NOW = time();
     if (!defined('ONE_MINUTE')) {
         define('ONE_MINUTE', 60);
     }
@@ -310,14 +343,22 @@ function ZoteroRelativeTime($Timestamp = null) {
     $sod = mktime(0, 0, 0, date('m', $time), date('d', $time), date('Y', $time));
     $sod_now = mktime(0, 0, 0, date('m', $NOW), date('d', $NOW), date('Y', $NOW));
 
-    // today
-    if ($sod_now == $sod) {
-        if ($time > $NOW - (ONE_MINUTE)) {
-            return t('just now');
-        } elseif ($time > $NOW - (ONE_HOUR)) {
-            $MinutesAgo = ceil($SecondsAgo / 60);
-            return sprintf(t('%s minutes ago'), $MinutesAgo);
+    // < 4 hours ago
+    if ($time > $NOW - (ONE_MINUTE)) {
+        return t('just now');
+    } elseif ($time > $NOW - (ONE_HOUR)) {
+        $MinutesAgo = ceil($SecondsAgo / 60);
+        return sprintf(t('%s minutes ago'), $MinutesAgo);
+    } elseif ($time > $NOW - (ONE_HOUR * 4)) {
+        $HoursAgo = ($SecondsAgo / 60) /60;
+        if($HoursAgo < 1.5) {
+            return t('1 hour ago');
+        } else {
+            return sprintf(t('%s hours ago'), ceil($HoursAgo) );
         }
+    }
+    // > 4 hour ago, but still today
+    if ($sod_now == $sod) {
         return sprintf(t('today at %s'), date('g:ia', $time));
     }
 
@@ -339,7 +380,8 @@ function ZoteroRelativeTime($Timestamp = null) {
     }
 
     //more than 30 days, just print the date
-    return ZoteroDiscussionDate($Timestamp);
+    $Format = t('Date.DefaultFormat', '%B %e, %Y');
+    return strftime($Format, $Timestamp);
 }
 
 function formatDateCustom($Timestamp = '', $Format = '') {
@@ -353,8 +395,10 @@ function formatDateCustom($Timestamp = '', $Format = '') {
         $Timestamp = time(); // return '&#160;'; Apr 22, 2009 - found a bug where "Draft Saved At X" returned a nbsp here instead of the formatted current time.
     }
     $GmTimestamp = $Timestamp;
+    $secondsOffset = SecondsOffset();
+    $time = $Timestamp + $secondsOffset;
+    $Now = time() + $secondsOffset;
 
-    $Now = time();
     if (!defined('ONE_DAY')) {
         define('ONE_DAY', 86400);
     }
@@ -388,43 +432,13 @@ function formatDateCustom($Timestamp = '', $Format = '') {
 
     //return a relative time string if within 30 days
     if(($Now - $Timestamp) < (ONE_DAY * 30)){
-        $Result = ZoteroRelativeTime($Timestamp);
+        $Result = ZoteroRelativeTime($GmTimestamp);
     } else {
-        // Alter the timestamp based on the user's hour offset
-        $Session = Gdn::session();
-        $HourOffset = 0;
-
-        if ($Session->UserID > 0) {
-            $HourOffset = $Session->User->HourOffset;
-        } elseif (class_exists('DateTimeZone')) {
-            if (!isset($GuestHourOffset)) {
-                $GuestTimeZone = c('Garden.GuestTimeZone');
-                if ($GuestTimeZone) {
-                    try {
-                        $TimeZone = new DateTimeZone($GuestTimeZone);
-                        $Offset = $TimeZone->getOffset(new DateTime('now', new DateTimeZone('UTC')));
-                        $GuestHourOffset = floor($Offset / 3600);
-                    } catch (Exception $Ex) {
-                        $GuestHourOffset = 0;
-                        // Do nothing, but don't set the timezone.
-                        logException($Ex);
-                    }
-                }
-            }
-            $HourOffset = $GuestHourOffset;
-        }
-
-        if ($HourOffset <> 0) {
-            $SecondsOffset = $HourOffset * 3600;
-            $Timestamp += $SecondsOffset;
-            $Now += $SecondsOffset;
-        }
-
         $Result = strftime($Format, $Timestamp);
     }
 
     if ($Html) {
-        $Result = wrap($Result, 'time', array('title' => strftime($FullFormat, $Timestamp), 'datetime' => gmdate('c', $GmTimestamp)));
+        $Result = wrap($Result, 'time', array('title' => strftime($FullFormat, $time), 'datetime' => date('c', $time)));
     }
     return $Result;
 }

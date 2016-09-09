@@ -68,6 +68,9 @@ foreach($Roles as $role){
         $userIsModerator = true;
     }
 }
+if(count($Roles) == 0){
+    $userInfo = false;
+}
 
 $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userInfo['slug']}";
 
@@ -80,9 +83,10 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
 <!-- <body id="{$BodyID}" class="{$BodyClass}"> -->
 <div id="Frame">
     <div class="Banner">
+        <a href="<?=$baseUrl?>/"><img id="logo" src="<?=$staticUrl('/images/theme/zotero_theme/zotero_32.png')?>" /></a>
         <ul>
             <? if ($userInfo): ?>
-                <li>Welcome, <a href="<?=$profileUrl($userInfo['slug']);?>"><?=htmlspecialchars($displayName)?></a></li>
+                <li><a href="<?=$profileUrl($userInfo['slug']);?>"><?=htmlspecialchars($displayName)?></a></li>
                 <li><a href="<?=$settingsUrl?>">Settings</a></li>
                 <li><a href="<?=$inboxUrl?>">Inbox<?=$CountUnread > 0 ? " ($CountUnread)" : "";?></a></li>
                 <li><a href="<?=$downloadUrl?>">Download</a></li>
@@ -104,7 +108,6 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
     </div>
     <footer>
         <div class="center container">
-                <img id="chnm-logo" src="<?=$staticUrl('/images/theme/rrchnmlogo-gray.png');?>" alt="Zotero">
             <nav role="secondary">                 
                 <ul>
                     <!-- <li><a href="#">Give Us Feedback</a></li> -->
@@ -126,7 +129,8 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
                 Museum and Library Services</a>, and the <a
                 href="http://sloan.org">Alfred P. Sloan Foundation</a>.
             </p>
-            <?$this->RenderAsset('Foot')?>
+            <img id="chnm-logo" src="<?=$staticUrl('/images/theme/rrchnmlogo-gray.png');?>" alt="Zotero">
+            <?//$this->RenderAsset('Foot')?>
         </div>
     </footer>
 </div>

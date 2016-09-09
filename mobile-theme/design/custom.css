@@ -6,7 +6,6 @@ body {
     color: #444;
     font:87.5%/1.42857143em "Lucida Grande", Verdana, sans-serif; 
     margin:0;
-    padding: 0 0 40px;
 }
 
 h1 {
@@ -23,6 +22,62 @@ a:hover {color: #369;}
 a:active {color: #333;}
 
 }
+
+/* == Footer == */
+footer .center {
+    background: #555;
+    padding: 40px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    color: #fff;
+    border-top: 5px solid #777;
+}
+
+footer p,
+footer ul {
+    color: #ccc;
+    color: rgba(255,255,255,0.5);
+    font-size:0.857142857em;
+}
+
+footer a:link,
+footer a:visited {
+    color: #ccc;
+    color: rgba(255,255,255, 0.5);
+}
+
+footer a:hover,
+footer a:active {
+    color: #ddd;
+    color: rgba(255,255,255, 0.75);
+}
+
+#chnm-logo {
+    /*float:right;*/
+    height:60px;
+}
+
+footer nav,
+footer p {
+    /*float:left;
+    clear:left;
+    width: 60%;*/
+}
+
+footer nav a {
+    font-weight:bold;
+}
+/*
+footer nav li {
+    padding: 0 0.2em;
+}*/
+nav li {
+    display:inline-block;
+}
+footer nav li:not(:last-child):after {
+    content: " · ";
+    color: rgba(255,255,255,0.25);
+}
+
 
 /* -- Vanilla Modifications -- */
 #content a:link {color: #c00;}
@@ -184,6 +239,7 @@ a:hover {
 }
 
 /* Hide Stuff */
+/*
 .DraftButton,
 .PreviewButton,
 input.DraftButton,
@@ -193,7 +249,7 @@ input.PreviewButton,
 #Panel {
     display: none;
 }
-
+*/
 a.Close {
     color: #555;
 }
@@ -204,32 +260,40 @@ body.Post a.Close {
 
 /* Banner */
 .Banner {
+    /*background: #3B5998;*/
+    background:rgba(0,0,0,0.1);
+    /*border-bottom: 2px solid rgba(0,0,0,0.1);*/
     padding: 0;
     text-align: left;
     position: relative;
+    height:42px;
+}
+
+.Banner #logo {
+    display:inline-block;
+    padding:5px;
 }
 
 .Banner ul {
-    background: #3B5998;
     padding: 0;
     margin: 0;
-    width: 100%;
-    float: left;
+    margin-top:8px;
+    /*width: 100%;*/
+    float: right;
 }
 
 .Banner ul li {
-    display: block;
+    display: inline-block;
     padding: 0;
     margin: 0;
-    float: left;
+    /*float: left;*/
 }
 
 .Banner ul li a {
     font-weight: bold;
     padding: 3px 6px;
     font-size: 11px;
-    color: #fff;
-    display: block;
+    /*color: #ccc;*/
 }
 
 .Banner ul li a:hover {
@@ -363,6 +427,9 @@ body.Discussion a.Bookmark {
     padding: 8px;
 }
 
+.PagerNub {
+    display:none;
+}
 .Pager {
     float: none;
     font-size: 120%;
@@ -525,20 +592,6 @@ li.Editing {
 
 td.BigCount.CountDiscussions {
     width: 80px; /* Fix overlap glitch in category table homepage */
-}
-
-/* Foot */
-.FootMenu {
-    margin: 10px 0;
-}
-
-.FootMenu span {
-    color: #444;
-    margin: 0 6px;
-}
-
-#Foot a.SignIn {
-    color: #3B5998;
 }
 
 /* Autocomplete */
