@@ -268,6 +268,10 @@ input.PreviewButton,
     display: none;
 }
 */
+.HomepageTitle {
+    display:none;
+}
+
 a.Close {
     color: #555;
 }

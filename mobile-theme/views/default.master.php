@@ -98,9 +98,10 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
         </ul>
     </div>
     <div id="Body">
-        <!-- <div class="BreadcrumbsWrapper">
-            {breadcrumbs homelink="0"}
-        </div> -->
+        <div class="BreadcrumbsWrapper">
+            <?=Gdn_Theme::breadcrumbs([], 'Recent Discussions');?>
+            <!-- {breadcrumbs homelink="0"} -->
+        </div>
         <div id="content">
             <?$this->RenderAsset('Content')?>
             <!-- {asset name="Content"} -->
