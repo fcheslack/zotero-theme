@@ -97,6 +97,7 @@ class MobileThemeHooks implements Gdn_IPlugin {
     public function base_render_before($Sender) {
         if (isMobile() && is_object($Sender->Head)) {
             $Sender->Head->addTag('meta', array('name' => 'viewport', 'content' => "width=device-width,minimum-scale=1.0,maximum-scale=1.0"));
+            /*
             $Sender->Head->addString('
 <script type="text/javascript">
    // If not looking for a specific comment, hide the address bar in iphone
@@ -107,6 +108,7 @@ class MobileThemeHooks implements Gdn_IPlugin {
       }, 1000);
    }
 </script>');
+            */
         }
     }
 
