@@ -25,9 +25,20 @@ a:active {color: #333;}
 
 #content .Pager a.Highlight {
     color:#000;
+    text-decoration: underline;
 }
 div.DataBox.DataBox-Comments {
     clear:both;
+}
+div.AuthorWrap {
+    display:inline-block;
+    margin-right:10px;
+}
+div.Meta.CommentMeta.CommentInfo {
+    display:inline-block;
+}
+div.Meta.DiscussionMeta {
+    display:inline-block;
 }
 
 /* == Footer == */
