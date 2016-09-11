@@ -32,6 +32,7 @@ class MobileThemeHooks implements Gdn_IPlugin {
     //when a post goes to moderation after the queue was previously empty, send notifications
     //to moderators
     public function logModel_AfterInsert_handler($Sender, $args){
+        return;
         $count = getPendingPostCount();
         if($count == 1){
             //get moderator users
@@ -208,6 +209,14 @@ class MobileThemeHooks implements Gdn_IPlugin {
         echo $UserPhoto->toString();
     }
 }
+
+function getPendingPostCount(){
+    $logModel = new LogModel();
+    //$count = $logModel->getCountWhere("Operation = 'Pending' AND (RecordType = 'Discussion' OR RecordType = 'Comment')");
+    $count = $logModel->getCountWhere(['Operation'=>'Pending', 'RecordType'=>['Discussion', 'Comment']]);
+    return $count;
+}
+
 
 /* BEGIN ZOTERO SPECIFIC OVERRIDES */
 
