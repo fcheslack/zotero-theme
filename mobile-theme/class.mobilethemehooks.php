@@ -222,6 +222,14 @@ function getPendingPostCount(){
 
 /* BEGIN ZOTERO SPECIFIC OVERRIDES */
 
+function signInUrl(){
+    return c('Garden.Authenticator.SignInUrl');
+}
+
+function registerUrl(){
+    return c('Garden.Authenticator.RegisterUrl');
+}
+
 /**
  * Output comment form.
  * Overrides writeCommentForm in applications/vanilla/views/discussion/helper_functions.php

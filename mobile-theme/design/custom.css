@@ -40,6 +40,9 @@ div.Meta.CommentMeta.CommentInfo {
 div.Meta.DiscussionMeta {
     display:inline-block;
 }
+span.MItem.MCount.ViewCount {
+    display:none;
+}
 
 /* == Footer == */
 footer .center {

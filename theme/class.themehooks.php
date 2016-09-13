@@ -109,6 +109,14 @@ function getPendingPostCount(){
     return $count;
 }
 
+function signInUrl(){
+    return c('Garden.Authenticator.SignInUrl');
+}
+
+function registerUrl(){
+    return c('Garden.Authenticator.RegisterUrl');
+}
+
 /**
  * Output comment form.
  * Overrides writeCommentForm in applications/vanilla/views/discussion/helper_functions.php
@@ -171,115 +179,6 @@ if (!function_exists('ipanchor')){
     }
 }
 
-//WriteDiscussion override with views count removed
-//overrides applications/vanilla/views/discussions/helper_functions.php::writeDiscussion
-if (!function_exists('WriteDiscussion')):
-    function writeDiscussion($Discussion, &$Sender, &$Session) {
-        $CssClass = CssClass($Discussion);
-        $DiscussionUrl = $Discussion->Url;
-        $Category = CategoryModel::categories($Discussion->CategoryID);
-
-        if ($Session->UserID)
-            $DiscussionUrl .= '#latest';
-
-        $Sender->EventArguments['DiscussionUrl'] = &$DiscussionUrl;
-        $Sender->EventArguments['Discussion'] = &$Discussion;
-        $Sender->EventArguments['CssClass'] = &$CssClass;
-
-        $First = UserBuilder($Discussion, 'First');
-        $Last = UserBuilder($Discussion, 'Last');
-        $Sender->EventArguments['FirstUser'] = &$First;
-        $Sender->EventArguments['LastUser'] = &$Last;
-
-        $Sender->fireEvent('BeforeDiscussionName');
-
-        $DiscussionName = $Discussion->Name;
-        if ($DiscussionName == '')
-            $DiscussionName = t('Blank Discussion Topic');
-
-        $Sender->EventArguments['DiscussionName'] = &$DiscussionName;
-
-        static $FirstDiscussion = TRUE;
-        if (!$FirstDiscussion)
-            $Sender->fireEvent('BetweenDiscussion');
-        else
-            $FirstDiscussion = FALSE;
-
-        $Discussion->CountPages = ceil($Discussion->CountComments / $Sender->CountCommentsPerPage);
-        ?>
-        <li id="Discussion_<?php echo $Discussion->DiscussionID; ?>" class="<?php echo $CssClass; ?>">
-            <?php
-            if (!property_exists($Sender, 'CanEditDiscussions'))
-                $Sender->CanEditDiscussions = val('PermsDiscussionsEdit', CategoryModel::categories($Discussion->CategoryID)) && c('Vanilla.AdminCheckboxes.Use');
-
-            $Sender->fireEvent('BeforeDiscussionContent');
-
-            //   WriteOptions($Discussion, $Sender, $Session);
-            ?>
-            <span class="Options">
-      <?php
-      echo OptionsList($Discussion);
-      echo BookmarkButton($Discussion);
-      ?>
-   </span>
-
-            <div class="ItemContent Discussion">
-                <div class="Title">
-                    <?php
-                    echo AdminCheck($Discussion, array('', ' ')).
-                        anchor($DiscussionName, $DiscussionUrl);
-                    $Sender->fireEvent('AfterDiscussionTitle');
-                    ?>
-                </div>
-                <div class="Meta Meta-Discussion">
-                    <?php
-                    WriteTags($Discussion);
-                    ?>
-                    
-         <span class="MItem MCount CommentCount"><?php
-             printf(PluralTranslate($Discussion->CountComments,
-                 '%s comment html', '%s comments html', t('%s comment'), t('%s comments')),
-                 BigPlural($Discussion->CountComments, '%s comment'));
-             ?></span>
-         <span class="MItem MCount DiscussionScore Hidden"><?php
-             $Score = $Discussion->Score;
-             if ($Score == '') $Score = 0;
-             printf(Plural($Score,
-                 '%s point', '%s points',
-                 BigPlural($Score, '%s point')));
-             ?></span>
-                    <?php
-                    echo NewComments($Discussion);
-
-                    $Sender->fireEvent('AfterCountMeta');
-
-                    if ($Discussion->LastCommentID != '') {
-                        echo ' <span class="MItem LastCommentBy">'.sprintf(t('Most recent by %1$s'), userAnchor($Last)).'</span> ';
-                        echo ' <span class="MItem LastCommentDate">'.Gdn_Format::date($Discussion->LastDate, 'html').'</span>';
-                    } else {
-                        echo ' <span class="MItem LastCommentBy">'.sprintf(t('Started by %1$s'), userAnchor($First)).'</span> ';
-                        echo ' <span class="MItem LastCommentDate">'.Gdn_Format::date($Discussion->FirstDate, 'html');
-
-                        if ($Source = val('Source', $Discussion)) {
-                            echo ' '.sprintf(t('via %s'), t($Source.' Source', $Source));
-                        }
-
-                        echo '</span> ';
-                    }
-
-                    if ($Sender->data('_ShowCategoryLink', true) && c('Vanilla.Categories.Use') && $Category)
-                        echo wrap(Anchor(htmlspecialchars($Discussion->Category), CategoryUrl($Discussion->CategoryUrlCode)), 'span', array('class' => 'MItem Category '.$Category['CssClass']));
-
-                    $Sender->fireEvent('DiscussionMeta');
-                    ?>
-                </div>
-            </div>
-            <?php $Sender->fireEvent('AfterDiscussionContent'); ?>
-        </li>
-    <?php
-    }
-endif;
-
 // ==== Begin Custom Date Formatting Functions ====
 function SecondsOffset() {
     // Alter the timestamp based on the user's hour offset
@@ -301,6 +200,9 @@ function SecondsOffset() {
                     // Do nothing, but don't set the timezone.
                     logException($Ex);
                 }
+            } else {
+                //no info provided by browser
+                $GuestHourOffset = 0;
             }
         }
         $HourOffset = $GuestHourOffset;
