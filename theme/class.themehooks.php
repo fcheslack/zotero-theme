@@ -117,56 +117,6 @@ function registerUrl(){
     return c('Garden.Authenticator.RegisterUrl');
 }
 
-/**
- * Output comment form.
- * Overrides writeCommentForm in applications/vanilla/views/discussion/helper_functions.php
- *
- * @since 2.1
- */
-if (!function_exists('WriteCommentForm')){
-    function writeCommentForm() {
-        $Session = Gdn::session();
-        $Controller = Gdn::controller();
-
-        $Discussion = $Controller->data('Discussion');
-        $PermissionCategoryID = val('PermissionCategoryID', $Discussion);
-        $UserCanClose = $Session->checkPermission('Vanilla.Discussions.Close', TRUE, 'Category', $PermissionCategoryID);
-        $UserCanComment = $Session->checkPermission('Vanilla.Comments.Add', TRUE, 'Category', $PermissionCategoryID);
-
-        // Closed notification
-        if ($Discussion->Closed == '1') {
-            ?>
-            <div class="Foot Closed">
-                <div class="Note Closed"><?php echo t('This discussion has been closed.'); ?></div>
-                <?php //echo anchor(t('All Discussions'), 'discussions', 'TabLink'); ?>
-            </div>
-        <?php
-        } else if (!$UserCanComment) {
-            if (!Gdn::session()->isValid()) {
-                ?>
-                <div class="Foot Closed">
-                    <div class="Note Closed SignInOrRegister"><?php
-                        $Popup = (c('Garden.SignIn.Popup')) ? ' class="Popup"' : '';
-                        $ReturnUrl = Gdn::request()->PathAndQuery();
-                        echo formatString(
-                            t('Sign In or Register to Comment.', '<a href="{SignInUrl,html}">Sign In</a> or <a href="{RegisterUrl,html}">Register</a> to comment.'),
-                            array(
-                                'SignInUrl' => Gdn::Config("Zotero.BaseUrl", "") . "/user/login",
-                                'RegisterUrl' => Gdn::Config("Zotero.BaseUrl", "") . "/user/register",
-                            )
-                        ); ?>
-                    </div>
-                    <?php //echo anchor(t('All Discussions'), 'discussions', 'TabLink'); ?>
-                </div>
-            <?php
-            }
-        }
-
-        if (($Discussion->Closed == '1' && $UserCanClose) || ($Discussion->Closed == '0' && $UserCanComment))
-            echo $Controller->fetchView('comment', 'post', 'vanilla');
-    }
-}
-
 //don't actually link to ip search, since it's not optimized
 //overrides library/core/functions.render.php:ipAnchor
 if (!function_exists('ipanchor')){
