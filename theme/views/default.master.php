@@ -86,7 +86,8 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
                                           share the results of your research."/>
         <?$this->RenderAsset('Head')?>
         <!--{asset name="Head"}-->
-        <link rel="shortcut icon" type="image/png" sizes="16x16" href="<?=$staticUrl("/images/theme/zotero_theme/zotero_16.png");?>" />
+        <link rel="shortcut icon" type="image/png" sizes="16x16" href="<?=$staticUrl("/images/theme/zotero_theme/favicon.ico");?>" />
+        <?/*<link rel="shortcut icon" type="image/png" sizes="16x16" href="<?=$staticUrl("/images/theme/zotero_theme/zotero_16.png");?>" />*/?>
         <?/*<link rel="shortcut icon" type="image/png" sizes="24x24" href="<?=$staticUrl("/images/theme/zotero_theme/zotero_24.png");?>" />
         <link rel="shortcut icon" type="image/png" sizes="48x48" href="<?=$staticUrl("/images/theme/zotero_theme/zotero_48.png")?>" />
         <link rel="apple-touch-icon" type="image/png" href="<?=$staticUrl("/images/theme/zotero_theme/zotero_48.png")?>" />

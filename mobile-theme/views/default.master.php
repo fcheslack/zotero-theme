@@ -76,7 +76,13 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
 
 ?>
 <head>
+    <meta charset="utf-8" />
+    <meta name="keywords" content="Zotero, research, tool, firefox, extension, reference"/>
+    <meta name="description" content="Zotero is a powerful, easy-to-use research tool that 
+                                      helps you gather, organize, and analyze sources and then 
+                                      share the results of your research."/>
     <?$this->RenderAsset('Head')?>
+    <link rel="shortcut icon" type="image/png" sizes="16x16" href="<?=$staticUrl("/images/theme/zotero_theme/favicon.ico");?>" />
     <!-- {asset name='Head'} -->
 </head>
 <body id="<?=$BodyIdentifier?>" class="<?=$this->CssClass?>">
