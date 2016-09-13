@@ -16,10 +16,10 @@ class ZoteroSearchModel extends SearchModel {
      * @return array|null
      * @throws Exception
      */
-    public function search($Search, $Offset = 0, $Limit = 20) {
+    public function search($Search, $Offset = 0, $Limit = 20, $FeedHack = false) {
         //error_log("ZoteroSearchModel.search");
         // If there are no searches then return an empty array.
-        if (trim($Search) == '') {
+        if (trim($Search) == '' && !$FeedHack) {
             return array();
         }
 
@@ -84,10 +84,27 @@ class ZoteroSearchModel extends SearchModel {
         $Parameters = $this->_Parameters;
         $this->reset();
         $this->SQL->reset();
+        
+        if ($FeedHack) {
+            if (!empty($_GET['Limit'])) {
+                if ($_GET['Limit'] > 150) {
+                    $Limit = 150;
+                }
+                else {
+                    $Limit = (int) $_GET['Limit'];
+                }
+            }
+            else {
+                $Limit = 50;
+            }
+            $Sql = "(select '0' as `Relavence`, d.DiscussionID as `PrimaryID`, d.Name as `Title`, d.Body as `Summary`, d.Format as `Format`, d.CategoryID as `CategoryID`, d.Score as `Score`, concat('/discussion/', d.DiscussionID) as `Url`, d.DateInserted as `DateInserted`, d.InsertUserID as `UserID`, 'Discussion' as `RecordType` from GDN_Discussion d ORDER BY DateInserted DESC LIMIT $Limit) UNION (select '0' as `Relavence`, c.CommentID as `PrimaryID`, d.Name as `Title`, c.Body as `Summary`, c.Format as `Format`, d.CategoryID as `CategoryID`, c.Score as `Score`, concat('/discussion/comment/', c.CommentID, '/#Comment_', c.CommentID) as `Url`, c.DateInserted as `DateInserted`, c.InsertUserID as `UserID`, 'Comment' as `RecordType` from GDN_Comment c left join GDN_Discussion d on d.DiscussionID = c.DiscussionID ORDER BY DateInserted DESC LIMIT $Limit) ORDER BY DateInserted DESC LIMIT $Limit";
+            $Parameters = [];
+        }
+        
         $Result = $this->Database->query($Sql, $Parameters)->resultArray();
-        //error_log($Sql);
+        
         foreach ($Result as $Key => $Value) {
-            if (isset($Value['Summary'])) {
+            if (isset($Value['Summary']) && !$FeedHack) {
                 $Value['Summary'] = Condense(Gdn_Format::to($Value['Summary'], $Value['Format']));
                 $Result[$Key] = $Value;
             }
@@ -95,7 +112,17 @@ class ZoteroSearchModel extends SearchModel {
             switch ($Value['RecordType']) {
                 case 'Discussion':
                     $Discussion = arrayTranslate($Value, array('PrimaryID' => 'DiscussionID', 'Title' => 'Name', 'CategoryID'));
-                    $Result[$Key]['Url'] = DiscussionUrl($Discussion, 1);
+                    if ($FeedHack) {
+                        $Result[$Key]['Url'] = DiscussionUrl($Discussion);
+                    }
+                    else {
+                        $Result[$Key]['Url'] = DiscussionUrl($Discussion, 1);
+                    }
+                    break;
+                
+                case 'Comment':
+                    $Comment = arrayTranslate($Value, array('PrimaryID' => 'CommentID', 'Title' => 'Name', 'CategoryID'));
+                    $Result[$Key]['Url'] = CommentUrl($Comment);
                     break;
             }
         }
