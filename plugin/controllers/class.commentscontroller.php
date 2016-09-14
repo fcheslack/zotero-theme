@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages basic searching.
+ * Adds comments feed
  *
  * @copyright 2009-2015 Vanilla Forums Inc.
  * @license http://www.opensource.org/licenses/gpl-2.0.php GNU GPL v2
@@ -16,9 +16,6 @@ class CommentsController extends Gdn_Controller {
     /** @var array Models to automatically instantiate. */
     public $Uses = array('Database');
 
-    /**  @var Gdn_Form */
-    public $Form;
-
     /**  @var SearchModel */
     public $SearchModel;
 
@@ -30,13 +27,6 @@ class CommentsController extends Gdn_Controller {
 
         // Object instantiation
         $this->SearchModel = new ZoteroSearchModel();
-        //$this->SearchModel = new SearchModel();
-        $Form = Gdn::Factory('Form');
-
-        // Form prep
-        $Form->Method = 'get';
-        $Form->InputPrefix = '';
-        $this->Form = $Form;
     }
 
     /**
@@ -46,9 +36,7 @@ class CommentsController extends Gdn_Controller {
      * @access public
      */
     public function initialize() {
-        //error_log('zotero plugin search controller');
         $this->Head = new HeadModule($this);
-        $this->addModule('GuestModule');
         parent::initialize();
     }
 
@@ -60,38 +48,31 @@ class CommentsController extends Gdn_Controller {
      * @param int $Page Page number.
      */
     public function index($Page = '') {
-        //$this->title(t('Recent Comments'));
-
-        saveToConfig('Garden.Format.EmbedSize', '160x90', false);
+        $this->title(t('Recent Comments'));
         Gdn_Theme::section('SearchResults');
 
-        list($Offset, $Limit) = offsetLimit($Page, c('Garden.Search.PerPage', 20));
-        $this->setData('_Limit', $Limit);
-
-        $Search = $this->Form->getFormValue('Search');
-        $Mode = $this->Form->getFormValue('Mode');
-        if ($Mode) {
-            $this->SearchModel->ForceSearchMode = $Mode;
+        if (!empty($_GET['Limit'])) {
+            if ($_GET['Limit'] > 150) {
+                $Limit = 150;
+            }
+            else {
+                $Limit = (int) $_GET['Limit'];
+            }
         }
+        else {
+            $Limit = 50;
+        }
+
         try {
-            $ResultSet = $this->SearchModel->Search($Search, $Offset, $Limit, true);
+            $ResultSet = $this->SearchModel->feedSearch($Limit);
         } catch (Gdn_UserException $Ex) {
-            $this->Form->addError($Ex);
             $ResultSet = array();
         } catch (Exception $Ex) {
             LogException($Ex);
-            $this->Form->addError($Ex);
             $ResultSet = array();
         }
+        //link to users so feed has 'creator'
         Gdn::userModel()->joinUsers($ResultSet, array('UserID'));
-
-        // Fix up the summaries.
-        /*$SearchTerms = explode(' ', Gdn_Format::text($Search));
-        foreach ($ResultSet as &$Row) {
-            $Row['Summary'] = SearchExcerpt(Gdn_Format::plainText($Row['Summary'], $Row['Format']), $SearchTerms);
-            $Row['Summary'] = Emoji::instance()->translateToHtml($Row['Summary']);
-            $Row['Format'] = 'Html';
-        }*/
 
         $this->setData('SearchResults', $ResultSet, true);
         $this->setData('SearchTerm', Gdn_Format::text($Search), true);
@@ -104,27 +85,9 @@ class CommentsController extends Gdn_Controller {
             $NumResults++;
         }
 
-        // Build a pager
-        $PagerFactory = new Gdn_PagerFactory();
-        $this->Pager = $PagerFactory->GetPager('MorePager', $this);
-        $this->Pager->MoreCode = 'More Results';
-        $this->Pager->LessCode = 'Previous Results';
-        $this->Pager->ClientID = 'Pager';
-        $this->Pager->configure(
-            $Offset,
-            $Limit,
-            $NumResults,
-            'dashboard/search/%1$s/%2$s/?Search='.Gdn_Format::url($Search)
-        );
-
-//		if ($this->_DeliveryType != DELIVERY_TYPE_ALL) {
-//         $this->setJson('LessRow', $this->Pager->toString('less'));
-//         $this->setJson('MoreRow', $this->Pager->toString('more'));
-//         $this->View = 'results';
-//      }
         $this->View = 'feed';
 
-        $this->canonicalUrl(url('search', true));
+        //$this->canonicalUrl(url('comments', true));
 
         $this->render();
     }

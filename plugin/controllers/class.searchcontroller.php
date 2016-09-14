@@ -46,7 +46,6 @@ class SearchController extends Gdn_Controller {
      * @access public
      */
     public function initialize() {
-        //error_log('zotero plugin search controller');
         $this->Head = new HeadModule($this);
         $this->addJsFile('jquery.js');
         $this->addJsFile('jquery.livequery.js');
@@ -72,11 +71,9 @@ class SearchController extends Gdn_Controller {
      * @param int $Page Page number.
      */
     public function index($Page = '') {
-        //error_log('zotero plugin search controller search method');
         $this->addJsFile('search.js');
         $this->title(t('Search'));
 
-        saveToConfig('Garden.Format.EmbedSize', '160x90', false);
         Gdn_Theme::section('SearchResults');
 
         list($Offset, $Limit) = offsetLimit($Page, c('Garden.Search.PerPage', 20));
