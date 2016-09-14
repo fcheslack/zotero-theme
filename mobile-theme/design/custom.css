@@ -205,6 +205,10 @@ div.InformWrapper.ModerationPending {
     padding:15px;
 }
 
+code {
+    background: #eee;
+    border: 1px solid #ddd;
+}
 
 /* END ZOTERO SPECIFIC */
 
