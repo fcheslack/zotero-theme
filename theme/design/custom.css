@@ -884,3 +884,7 @@ code {
     background: #eee;
     border: 1px solid #ddd;
 }
+
+.Author .PhotoWrap {
+    display:none;
+}
