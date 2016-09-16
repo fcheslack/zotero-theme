@@ -62,6 +62,11 @@ PagerModule::write(array('Sender' => $this, 'Limit' => 10));
                     echo '<span class="Tag Tag-'.$Row['Operation'].'">'.t($Row['Operation']).'</span> ';
                     echo '<span class="Tag Tag-'.$RecordLabel.'">'.anchor(t($RecordLabel), $Url).'</span> ';
 
+                    //Link to discussion
+                    if ($Row['Operation'] === 'Pending' && $Row['RecordType'] === 'Comment') {
+                        $discussionUrl = "/discussion/{$Row['ParentRecordID']}/x/p1";
+                        echo anchor("Discussion", $discussionUrl);
+                    }
                     echo '</span>';
 
                     if (checkPermission('Garden.PersonalInfo.View') && $Row['RecordIPAddress']) {
