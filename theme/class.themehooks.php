@@ -21,7 +21,9 @@ class zoteroThemeHooks implements Gdn_IPlugin {
         unset($Sender->Assets['Panel']['NewDiscussionModule']);
         unset($Sender->Assets['Panel']['CategoriesModule']);
         unset($Sender->Assets['Panel']['BookmarkedModule']);
-        unset($Sender->Assets['Panel']['SideMenuModule']);
+        if(isset($Sender->ControllerName) && $Sender->ControllerName === 'profilecontroller'){
+            unset($Sender->Assets['Panel']['SideMenuModule']);
+        }
     }
 
     public function LogController_Render_Before($Sender, $args){
