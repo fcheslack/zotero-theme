@@ -24,6 +24,10 @@ class zoteroThemeHooks implements Gdn_IPlugin {
         if(isset($Sender->ControllerName) && $Sender->ControllerName === 'profilecontroller'){
             unset($Sender->Assets['Panel']['SideMenuModule']);
         }
+
+        if (Gdn::session()->isValid()) {
+            Gdn::userModel()->updateVisit(Gdn::session()->UserID);
+        }
     }
 
     public function LogController_Render_Before($Sender, $args){
