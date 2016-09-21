@@ -73,7 +73,7 @@ if(count($Roles) == 0){
 }
 
 $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userInfo['slug']}";
-
+$userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
 ?>
     <head>
         <meta charset="utf-8" />
@@ -156,7 +156,7 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
             </nav>
             <form action="<?=$baseForumsUrl?>/search/" class="zform zsearch" id="simple-search">
                 <div>
-                    <input type="text" name="Search" size="20" id="header-search-query"/>
+                    <input type="text" name="Search" size="20" id="header-search-query" placeholder="Search forums"/>
                     <input class="button" type="submit" value="Search">
                 </div>
             </form>
@@ -198,9 +198,10 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
                   <h2>Discussion Filters</h2>
                   <div class="BoxFilter BoxDiscussionFilter">
                       <ul class="FilterMenu">
+                        <li><a href="/discussions/participated">Participated</a></li>
                         <li><a href="/discussions/mine">Your Discussions</a></li>
                         <li><a href="/discussions/bookmarked">Your Bookmarks</a></li>
-                        <!--<li><a href="/comments/mine">Your Comments</a></li>-->
+                        <!-- <li><a href="<?=$userCommentsUrl?>">Your Comments</a></li> -->
                         <li><a href="/drafts">Your Drafts</a></li>
                       </ul>
                   </div>
