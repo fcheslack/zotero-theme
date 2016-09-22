@@ -888,3 +888,9 @@ code {
 .Author .PhotoWrap {
     display:none;
 }
+.Tag.RoleTag {
+    background-color: #66c;
+}
+.Item.Role_Administrator {
+    background-color: rgba(0,0,200,.05);
+}

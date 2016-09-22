@@ -38,6 +38,48 @@ class zoteroThemeHooks implements Gdn_IPlugin {
         //$Sender->AddJsFile('posthelp.js', 'themes/zotero-default');
     }
 
+    public function discussionController_AuthorInfo_handler($Sender, $args){
+        if(!c('Zotero.AddRoleTags', false)){
+            return;
+        }
+        $roleTag = '';
+
+        $authorUserID = $args['Author']->UserID;
+        $Roles = Gdn::UserModel()->GetRoles($authorUserID)->ResultArray();
+        foreach($Roles as $role){
+            if($role['Name'] == 'Administrator'){
+                $roleTag = "<span class='Tag RoleTag'>Admin</span>";
+            } elseif($role['Name'] == 'Moderator'){
+                $roleTag = "<span class='Tag RoleTag'>Moderator</span>";
+            }
+        }
+
+        echo $roleTag;
+    }
+
+    public function discussionController_BeforeDiscussionDisplay_handler($Sender, $args){
+        if(!c('Zotero.AddRoleClasses', false)){
+            return;
+        }
+
+        $authorUserID = $args['Author']->UserID;
+        $Roles = Gdn::UserModel()->GetRoles($authorUserID)->ResultArray();
+        foreach($Roles as $role){
+            $args['CssClass'] .= " Role_{$role['Name']}";
+        }
+    }
+
+    public function discussionController_BeforeCommentDisplay_handler($Sender, $args){
+        if(!c('Zotero.AddRoleClasses', false)){
+            return;
+        }
+        $authorUserID = $args['Author']->UserID;
+        $Roles = Gdn::UserModel()->GetRoles($authorUserID)->ResultArray();
+        foreach($Roles as $role){
+            $args['CssClass'] .= " Role_{$role['Name']}";
+        }
+    }
+
     public function PostController_BeforeFormInputs_handler($Sender, $args){
         echo '<div id="SuggestedReading" style="display:none;"><p>You may want to read:</p><ul id="suggestedReadingList"></ul></div>';
     }

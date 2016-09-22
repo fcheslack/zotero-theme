@@ -20,6 +20,52 @@ class MobileThemeHooks implements Gdn_IPlugin {
     }
 
     /* Begin Zotero specific themehooks */
+    public function discussionController_AuthorInfo_handler($Sender, $args){
+        if(!c('Zotero.AddRoleTags', false)){
+            return;
+        }
+        $roleTag = '';
+
+        $authorUserID = $args['Author']->UserID;
+        $Roles = Gdn::UserModel()->GetRoles($authorUserID)->ResultArray();
+        foreach($Roles as $role){
+            if($role['Name'] == 'Administrator'){
+                $roleTag = "<span class='Tag RoleTag'>Admin</span>";
+            } elseif($role['Name'] == 'Moderator'){
+                $roleTag = "<span class='Tag RoleTag'>Moderator</span>";
+            }
+        }
+
+        echo $roleTag;
+    }
+
+    public function discussionController_BeforeDiscussionDisplay_handler($Sender, $args){
+        if(!c('Zotero.AddRoleClasses', false)){
+            return;
+        }
+
+        $authorUserID = $args['Author']->UserID;
+        $Roles = Gdn::UserModel()->GetRoles($authorUserID)->ResultArray();
+        foreach($Roles as $role){
+            $args['CssClass'] .= " Role_{$role['Name']}";
+        }
+    }
+
+    public function discussionController_BeforeCommentDisplay_handler($Sender, $args){
+        if(!c('Zotero.AddRoleClasses', false)){
+            return;
+        }
+        $authorUserID = $args['Author']->UserID;
+        $Roles = Gdn::UserModel()->GetRoles($authorUserID)->ResultArray();
+        foreach($Roles as $role){
+            $args['CssClass'] .= " Role_{$role['Name']}";
+        }
+    }
+
+    public function PostController_BeforeFormInputs_handler($Sender, $args){
+        echo '<div id="SuggestedReading" style="display:none;"><p>You may want to read:</p><ul id="suggestedReadingList"></ul></div>';
+    }
+
     public function logModel_AfterRestore_handler($sender, $args){
         if($args['Log']['Operation'] == 'Pending'){
             if($args['Log']['RecordType'] == 'Discussion' || $args['Log']['RecordType'] == 'Comment'){

@@ -708,3 +708,13 @@ td.BigCount {
 .CountItemWrap {
     width: auto; /* Keep counts from being mushed together */
 }
+
+.Author .PhotoWrap {
+    display:none;
+}
+.Tag.RoleTag {
+    background-color: #66c;
+}
+.Item.Role_Administrator {
+    background-color: rgba(0,0,200,.05);
+}
