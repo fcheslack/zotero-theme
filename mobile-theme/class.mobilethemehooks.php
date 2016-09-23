@@ -66,11 +66,29 @@ class MobileThemeHooks implements Gdn_IPlugin {
         echo '<div id="SuggestedReading" style="display:none;"><p>You may want to read:</p><ul id="suggestedReadingList"></ul></div>';
     }
 
-    public function logModel_AfterRestore_handler($sender, $args){
+    public function logModel_AfterRestore_handler($Sender, $args){
         if($args['Log']['Operation'] == 'Pending'){
             if($args['Log']['RecordType'] == 'Discussion' || $args['Log']['RecordType'] == 'Comment'){
                 $userID = $args['Log']['InsertUserID'];
                 Gdn::userModel()->setField($userID, 'Verified', 1);
+
+                if($args['Log']['RecordType'] == 'Comment'){
+                    //update DateLastComment and LastCommentUserID for discussion
+                    $discussionID = $args['Log']['Data']['DiscussionID'];
+                    if(!$discussionID){
+                        throw new \Exception("No DiscussionID found in Event Log.Data.DiscussionID");
+                    }
+                    $latestCommentQ = 'SELECT * FROM GDN_Comment AS gc WHERE gc.DiscussionID = ? ORDER BY DateInserted DESC LIMIT 1';
+                    $latestComment = Gdn::database()->query($latestCommentQ, [$discussionID])->firstRow();
+
+                    $latestUserID = val('InsertUserID', $latestComment, false);
+                    $latestDateInserted = val('DateInserted', $latestComment, false);
+                    if($latestUserID == false || $latestDateInserted == false){
+                        throw new \Exception("Unexpected value for latestUserID or latestDateInserted");
+                    }
+                    $updateSql = 'UPDATE GDN_Discussion SET DateLastComment = ?, LastCommentUserID = ? WHERE DiscussionID = ?';
+                    Gdn::database()->query($updateSql, [$latestDateInserted, $latestUserID, $discussionID]);
+                }
             }
         }
     }
