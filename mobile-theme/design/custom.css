@@ -714,6 +714,8 @@ td.BigCount {
 }
 .Tag.RoleTag {
     background-color: #66c;
+    position:relative;
+    top:-3px;
 }
 .Item.Role_Administrator {
     background-color: rgba(0,0,200,.05);
