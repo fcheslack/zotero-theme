@@ -57,7 +57,7 @@ $outdatedVersion = function(){
 
 $userIsAdmin = false;
 $userIsModerator = false;
-$UserID = Gdn::Controller()->Data('Profile.UserID', Gdn::Session()->UserID);
+$UserID = Gdn::Session()->UserID;
 $User = Gdn::UserModel()->GetID($UserID);
 $CountUnread = $User->CountUnreadConversations;
 $Roles = Gdn::UserModel()->GetRoles($UserID)->ResultArray();
