@@ -32,7 +32,6 @@ class ZoteroPlugin extends Gdn_Plugin {
 	}
 	*/
 	public function base_render_before($Sender){
-		error_log('base_render_before');
         unset($Sender->Assets['Panel']['GuestModule']);
         unset($Sender->Assets['Panel']['SignedInModule']);
         unset($Sender->Assets['Panel']['DiscussionFilterModule']);
