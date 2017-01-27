@@ -150,7 +150,8 @@ function ZoteroRelativeTime($Timestamp = null) {
         if (date('i', $time) > (ONE_MINUTE + 30)) {
             $time += ONE_HOUR / 2;
         }
-        return t('1 day ago');
+        return sprintf(t('yesterday at %s'), date('g:ia', $time));
+        //return t('1 day ago');
     }
 
     //within 30 days
