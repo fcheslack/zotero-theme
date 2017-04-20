@@ -21,6 +21,14 @@ class ZoteroSearchModel extends SearchModel {
         if (trim($Search) == '') {
             return array();
         }
+        //add + before each term
+        $split = explode(' ', $Search);
+        foreach($split as $i => $val){
+            if($val[0] != '+'){
+                $split[$i] = '+' . $val;
+            }
+        }
+        $Search = implode(' ', $split);
 
         // Figure out the exact search mode.
         if ($this->ForceSearchMode) {
