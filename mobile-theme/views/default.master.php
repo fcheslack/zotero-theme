@@ -27,7 +27,7 @@ $peopleUrl = "$baseUrl/people";
 $documentationUrl = "$baseUrl/support";
 $getinvolvedUrl = "$baseUrl/getinvolved";
 $inboxUrl = "$baseForumsUrl/messages/inbox";
-$loginUrl = "$baseUrl/user/login";
+$loginUrl = "$baseUrl/user/login?force=1";
 $logoutUrl = "$baseUrl/user/logout";
 $registerUrl = "$baseUrl/user/register";
 $downloadUrl = "$baseUrl/download";
