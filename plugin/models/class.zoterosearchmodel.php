@@ -24,7 +24,7 @@ class ZoteroSearchModel extends SearchModel {
         //add + before each term
         $split = explode(' ', $Search);
         foreach($split as $i => $val){
-            if($val[0] != '+'){
+            if($val[0] != '+' && $val[0] != '-'){
                 $split[$i] = '+' . $val;
             }
         }
