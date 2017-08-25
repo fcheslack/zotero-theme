@@ -122,7 +122,7 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
             <?endif;?>
             
             <h1 id="logohead">
-                <a href="<?=$baseUrl?>/"><img src="<?=$staticUrl('/images/theme/zotero.png')?>" alt="Zotero"></a>
+                <a href="<?=$baseUrl?>/"><img src="<?=$staticUrl('/images/theme/zotero-logo.svg')?>" alt="Zotero"></a>
             </h1>
         
         <div id="login-links">
