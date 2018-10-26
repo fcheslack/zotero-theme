@@ -1,0 +1,15 @@
+{
+	"type": "addon",
+	"key": "zotero",
+	"name": "Zotero plugin",
+	"description": "plugin for use with Zotero forums",
+	"version": "0.2.0",
+	"mobileFriendly": true,
+	"authors": [
+		{
+			"name": "Faolan C-P",
+			"email": "",
+			"homepage": ""
+		}
+	]
+}
