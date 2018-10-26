@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js"> 
-<?
+<?php
 $baseUrl = Gdn::Config("Zotero.BaseUrl", "");// "//test.zotero.net";
 $baseForumsUrl = Gdn::Config("Zotero.BaseForumsUrl", "");
 $staticPath = Gdn::Config("Zotero.StaticPath", "");
@@ -79,20 +79,10 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="verify-v1" content="IwMu0wZAlDVdRyYXR2iE6fy68J75yL4ZExOpoyPDHdw="/>
-        <meta name="keywords" content="Zotero, research, tool, firefox, extension, reference"/>
-        <meta name="description" content="Zotero is a powerful, easy-to-use research tool that 
-                                          helps you gather, organize, and analyze sources and then 
-                                          share the results of your research."/>
-        <?$this->RenderAsset('Head')?>
+        <meta name="description" content="Zotero is a free, easy-to-use tool to help you collect, organize, cite, and share research."/>
+        <?php $this->RenderAsset('Head')?>
         <!--{asset name="Head"}-->
         <link rel="shortcut icon" type="image/png" sizes="16x16" href="<?=$staticUrl("/images/theme/zotero_theme/favicon.ico");?>" />
-        <?/*<link rel="shortcut icon" type="image/png" sizes="16x16" href="<?=$staticUrl("/images/theme/zotero_theme/zotero_16.png");?>" />*/?>
-        <?/*<link rel="shortcut icon" type="image/png" sizes="24x24" href="<?=$staticUrl("/images/theme/zotero_theme/zotero_24.png");?>" />
-        <link rel="shortcut icon" type="image/png" sizes="48x48" href="<?=$staticUrl("/images/theme/zotero_theme/zotero_48.png")?>" />
-        <link rel="apple-touch-icon" type="image/png" href="<?=$staticUrl("/images/theme/zotero_theme/zotero_48.png")?>" />
-        <link rel="apple-touch-icon-precomposed" type="image/png" href="<?=$staticUrl("/images/theme/zotero_theme/zotero_48.png")?>" />
-        */?>
         <!-- auto discovery links -->
         <link rel="alternate" type="application/rss+xml" title="Zotero Blog" href="http://feeds.feedburner.com/zotero/" />
         
@@ -114,28 +104,28 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
     <!-- Header -->
     <header role="banner" class="container">
         <div class="center container">
-            <?if($outdatedVersion()):?>
+            <?php if($outdatedVersion()):?>
                 <div id="outdated-version-notification" style="background-color:#FFFECC; text-align:left; border:1px solid #FAEBB1; padding:5px 20px; margin-bottom:10px;">
                 <p style="margin: 0; text-align: center;">Your version of Zotero for Firefox is out of date. <a href="https://www.zotero.org/download">Download the latest version.</a></p>
                 </div>
-                <?error_log($_SERVER['HTTP_X_ZOTERO_VERSION']);?>
-            <?endif;?>
+                <?php error_log($_SERVER['HTTP_X_ZOTERO_VERSION']);?>
+            <?php endif;?>
             
             <h1 id="logohead">
                 <a href="<?=$baseUrl?>/"><img src="<?=$staticUrl('/images/theme/zotero-logo.svg')?>" alt="Zotero"></a>
             </h1>
         
         <div id="login-links">
-            <? if ($userInfo): ?>
+            <?php if ($userInfo): ?>
                 Welcome, <a href="<?=$profileUrl($userInfo['slug']);?>"><?=htmlspecialchars($displayName)?></a>
                 <a href="<?=$settingsUrl?>">Settings</a>
                 <a href="<?=$inboxUrl?>">Inbox<?=$CountUnread > 0 ? " ($CountUnread)" : "";?></a>
                 <a href="<?=$downloadUrl?>">Download</a>
                 <a href="<?=$logoutUrl?>">Log Out</a>
-            <? else: ?>
+            <?php else: ?>
                 <a href="<?=$loginUrl?>">Log In</a>
                 <a href="<?=$registerUrl?>">Register</a>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
         
         <a href="<?=$baseUrl;?>/settings/storage?ref=usb" class="button" id="purchase-storage-link"><img src="<?=$staticUrl('/images/theme/archive.png')?>" /> Upgrade Storage</a>
@@ -144,7 +134,7 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
             <nav id="sitenav">
                 <ul>
                 <li ><a href="<?=$baseUrl?>">Home</a></li>
-                <? if ($userInfo): ?>
+                <?php if ($userInfo): ?>
                 <li ><a href="<?=$libraryUrl($userInfo['slug'])?>">My Library</a></li>
                 <?php endif; ?>
                 <li ><a href="<?=$groupsUrl?>">Groups</a></li>
@@ -179,22 +169,22 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
                     <li><a href="/discussions">Discussions</a></li>
                     <!--<li><a href="/categories">Categories</a></li>-->
                     <li><a href="/search">Search</a></li>
-                    <?if($userInfo):?>
+                    <?php if($userInfo):?>
                         <li><a href="<?=$forumNotificationPrefs?>">Notification Preferences</a></li>
-                    <?endif;?>
-                    <?if($userIsAdmin):?>
+                    <?php endif;?>
+                    <?php if($userIsAdmin):?>
                         <li><a href="/dashboard/settings">Forum Settings</a></li>
                     <?endif;?>
-                    <?if($userIsAdmin || $userIsModerator):?>
-                        <?$pendingCount = getPendingPostCount();?>
+                    <?php if($userIsAdmin || $userIsModerator):?>
+                        <?php $pendingCount = getPendingPostCount();?>
                         <li><a href="/dashboard/log/moderation">Moderation Queue (<?=$pendingCount?>)</a></li>
-                        <?if (c('Garden.Email.Disabled')):?>
+                        <?php if (c('Garden.Email.Disabled')):?>
                             <li>Email is disabled</li>
-                        <?endif;?>
-                    <?endif;?>
+                        <?php endif;?>
+                    <?php endif;?>
                   </ul>
               </div>
-              <?if($userInfo):?>
+              <?php if($userInfo):?>
                   <h2>Discussion Filters</h2>
                   <div class="BoxFilter BoxDiscussionFilter">
                       <ul class="FilterMenu">
@@ -205,13 +195,13 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
                         <li><a href="/drafts">Your Drafts</a></li>
                       </ul>
                   </div>
-              <?endif;?>
-              <?$this->RenderAsset('Panel')?>
+              <?php endif;?>
+              <?php $this->RenderAsset('Panel')?>
               <!--{asset name="Panel"}-->
             </aside>
 
             <main class="page-content major-col last-col" style="float:right" role="main">
-              <?$this->RenderAsset('Content')?>
+              <?php $this->RenderAsset('Content')?>
               <!--{asset name="Content"}-->
             </main>
 
@@ -235,18 +225,11 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
                     <li><a href="<?=$baseUrl?>/about/">About</a></li>
                 </ul>
             </nav>
-            <p>
-                Zotero is a project of the <a href="http://chnm.gmu.edu">Roy
-                Rosenzweig Center for History and New Media</a>, and was initially funded
-                 by the <a href="http://mellon.org">Andrew W. Mellon
-                Foundation</a>, the <a href="http://imls.gov">Institute of
-                Museum and Library Services</a>, and the <a
-                href="http://sloan.org">Alfred P. Sloan Foundation</a>.
-            </p>
-            <?$this->RenderAsset('Foot')?>
+            <p class="about">Zotero is a project of the <a href="http://digitalscholar.org/">Corporation for Digital Scholarship</a><span> and the </span><a href="https://rrchnm.org/">Roy Rosenzweig Center for History and New Media</a><span>. It was initially funded by the</span> <a href="https://mellon.org/">Andrew W. Mellon Foundation</a><span>, the</span> <a href="https://www.imls.gov/">Institute of Museum and Library Services</a><span>, and the </span><a href="https://sloan.org/">Alfred P. Sloan Foundation.</a></p>
+            <?php $this->RenderAsset('Foot')?>
         </div>
     </footer>
-    <?$this->FireEvent("AfterBody");?>
+    <?php $this->FireEvent("AfterBody");?>
     <!--{event name="AfterBody"}-->
   </body>
 </html>

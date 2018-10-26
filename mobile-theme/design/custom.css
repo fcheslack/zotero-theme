@@ -720,3 +720,6 @@ td.BigCount {
 .Item.Role_Administrator {
     background-color: rgba(0,0,200,.05);
 }
+.Item-Body a {
+    text-decoration: underline;
+}

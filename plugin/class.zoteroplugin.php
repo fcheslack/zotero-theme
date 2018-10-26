@@ -42,9 +42,11 @@ class ZoteroPlugin extends Gdn_Plugin {
             unset($Sender->Assets['Panel']['SideMenuModule']);
         }
 
+        /*
         if (Gdn::session()->isValid()) {
             Gdn::userModel()->updateVisit(Gdn::session()->UserID);
         }
+        */
     }
 
 	//add the vanilla search SearchModel when our overridden model fires the event
