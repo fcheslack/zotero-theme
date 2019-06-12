@@ -211,7 +211,6 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
     
     <footer>
         <div class="center container">
-                <img id="chnm-logo" src="<?=$staticUrl('/images/theme/rrchnmlogo-gray.png');?>" alt="Zotero">
             <nav role="secondary">                 
                 <ul>
                     <!-- <li><a href="#">Give Us Feedback</a></li> -->
@@ -225,7 +224,7 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
                     <li><a href="<?=$baseUrl?>/about/">About</a></li>
                 </ul>
             </nav>
-            <p class="about">Zotero is a project of the <a href="http://digitalscholar.org/">Corporation for Digital Scholarship</a><span> and the </span><a href="https://rrchnm.org/">Roy Rosenzweig Center for History and New Media</a><span>. It was initially funded by the</span> <a href="https://mellon.org/">Andrew W. Mellon Foundation</a><span>, the</span> <a href="https://www.imls.gov/">Institute of Museum and Library Services</a><span>, and the </span><a href="https://sloan.org/">Alfred P. Sloan Foundation.</a></p>
+            <p class="about">Zotero is a project of the <a href="http://digitalscholar.org/">Corporation for Digital Scholarship</a>, a nonprofit organization dedicated to the development of software and services for researchers and cultural heritage institutions.</p>
             <?php $this->RenderAsset('Foot')?>
         </div>
     </footer>
