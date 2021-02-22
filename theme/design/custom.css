@@ -878,11 +878,28 @@ div.InformWrapper.ModerationPending {
     margin-left: -175px;
 
     padding:15px;
+    font-size: larger;
 }
 
 code {
-    background: #eee;
-    border: 1px solid #ddd;
+    background: #f3f3f3;
+    color: #000;
+    border: 1px solid lightgray;
+    display: inline-block;
+    vertical-align: bottom;
+    font-family: Monaco,Consolas,Lucida Console,monospace;
+    font-size: 9pt;
+    tab-size: 2;
+    -moz-tab-size: 4;
+    white-space: pre;
+    max-width: 97%;
+    line-height: 1.7;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+#content code a:link {
+    color: #ecb3b3;
 }
 
 .Author .PhotoWrap {

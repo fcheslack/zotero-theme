@@ -122,21 +122,13 @@ $forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userIn
                     <li><a href="<?=$baseForumsUrl?>/categories/">Forums</a></li>
                     <li><a href="<?=$baseUrl?>/support/dev/start">Developers</a></li>
                     <li><a href="<?=$baseUrl?>/support/">Documentation</a></li>
-                    <li><a href="<?=$baseUrl?>/support/terms/privacy">Privacy</a></li>
+                    <li><a href="<?=$baseUrl?>/support/privacy">Privacy</a></li>
                     <li><a href="<?=$baseUrl?>/getinvolved/">Get Involved</a></li>
                     <li><a href="<?=$baseUrl?>/jobs">Jobs</a></li>
                     <li><a href="<?=$baseUrl?>/about/">About</a></li>
                 </ul>
             </nav>
-            <p>
-                Zotero is a project of the <a href="http://chnm.gmu.edu">Roy
-                Rosenzweig Center for History and New Media</a>, and was initially funded
-                 by the <a href="http://mellon.org">Andrew W. Mellon
-                Foundation</a>, the <a href="http://imls.gov">Institute of
-                Museum and Library Services</a>, and the <a
-                href="http://sloan.org">Alfred P. Sloan Foundation</a>.
-            </p>
-            <img id="chnm-logo" src="<?=$staticUrl('/images/theme/rrchnmlogo-gray.png');?>" alt="Zotero">
+            <p class="about">Zotero is a project of the <a href="http://digitalscholar.org/">Corporation for Digital Scholarship</a>, a nonprofit organization dedicated to the development of software and services for researchers and cultural heritage institutions.</p>
             <?//$this->RenderAsset('Foot')?>
         </div>
     </footer>

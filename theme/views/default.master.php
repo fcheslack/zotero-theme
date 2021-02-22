@@ -34,7 +34,7 @@ $downloadUrl = "$baseUrl/download";
 $dashboardUrl = "$baseForumsUrl/dashboard/settings";
 
 $outdatedVersion = function(){
-    $latestVersionParts = [4, 0, 26, 1];
+    $latestVersionParts = [4, 0, 29, 21];
     if(!isset($_SERVER['HTTP_X_ZOTERO_VERSION'])){
         return false;
     }
@@ -105,14 +105,14 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
     <header role="banner" class="container">
         <div class="center container">
             <?php if($outdatedVersion()):?>
-                <div id="outdated-version-notification" style="background-color:#FFFECC; text-align:left; border:1px solid #FAEBB1; padding:5px 20px; margin-bottom:10px;">
+                <div id="outdated-version-notification" style="background-color:#FFFECC; text-align:left; border:1px solid #FAEBB1; padding:5px 20px; margin-bottom:20px;">
                 <p style="margin: 0; text-align: center;">Your version of Zotero for Firefox is out of date. <a href="https://www.zotero.org/download">Download the latest version.</a></p>
                 </div>
                 <?php error_log($_SERVER['HTTP_X_ZOTERO_VERSION']);?>
             <?php endif;?>
             
             <h1 id="logohead">
-                <a href="<?=$baseUrl?>/"><img src="<?=$staticUrl('/images/theme/zotero-logo.svg')?>" alt="Zotero"></a>
+                <a href="<?=$baseUrl?>/"><img src="<?=$staticUrl('/images/theme/zotero-logo.1519224037.svg')?>" alt="Zotero"></a>
             </h1>
         
         <div id="login-links">
@@ -135,7 +135,7 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
                 <ul>
                 <li ><a href="<?=$baseUrl?>">Home</a></li>
                 <?php if ($userInfo): ?>
-                <li ><a href="<?=$libraryUrl($userInfo['slug'])?>">My Library</a></li>
+                <li ><a href="<?=$libraryUrl($userInfo['slug'])?>">Web Library</a></li>
                 <?php endif; ?>
                 <li ><a href="<?=$groupsUrl?>">Groups</a></li>
                 <li ><a href="<?=$peopleUrl?>">People</a></li>
@@ -218,7 +218,7 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
                     <li><a href="<?=$baseForumsUrl?>/categories/">Forums</a></li>
                     <li><a href="<?=$baseUrl?>/support/dev/start">Developers</a></li>
                     <li><a href="<?=$baseUrl?>/support/">Documentation</a></li>
-                    <li><a href="<?=$baseUrl?>/support/terms/privacy">Privacy</a></li>
+                    <li><a href="<?=$baseUrl?>/support/privacy">Privacy</a></li>
                     <li><a href="<?=$baseUrl?>/getinvolved/">Get Involved</a></li>
                     <li><a href="<?=$baseUrl?>/jobs">Jobs</a></li>
                     <li><a href="<?=$baseUrl?>/about/">About</a></li>
