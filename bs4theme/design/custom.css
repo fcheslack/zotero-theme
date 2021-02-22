@@ -1,0 +1,166 @@
+/* Color Palette
+----------------------------------------------------------------------------------------------------------------------
+Greys (lighter to darker)
+    #eee    : Unselected tabs
+    #d5d5d5 : Background
+    #555    : h3
+    #222    : Body Text
+
+Reds
+    #F7CBCA    : Light Red (Message bar errors)
+    #900    : Bright Red (h1, a)
+    #700    : Darker Red (a:visited)
+*/
+@media screen {
+    
+
+/* -- Vanilla Modifications -- */
+#content a:link {color: #c00;}
+#content a:visited {color: #c00;}
+#content a:hover {color: #c00;}
+#content a:active {color: #c00;}
+
+li.ItemDiscussion {
+    background: #fefecc;
+}
+
+li.ItemDiscussion.Read {
+    background: #fffeec;
+}
+
+.ItemDiscussion .Message {
+    font-size: 100%;
+}
+
+a.NewDiscussion {
+    color:#fff !important;
+    background: #900;
+    border: 1px solid #777;
+    text-shadow:none;
+    box-shadow: none;
+    /*margin-top:20px;*/
+}
+
+a.NewDiscussion:hover {
+    background: #999;
+}
+
+ul.DataList.Discussions {
+    border-top: 1px solid rgba(0,0,0,.1);
+}
+
+div.BoxFilter li {
+    padding:0.5em;
+}
+
+div.BoxFilter ul {
+    margin:0px 4px;
+}
+
+blockquote {
+    border-left: 3px solid #b1daea;
+    margin: 15px 5px;
+    padding: 6px;
+    padding-left: 10px;
+}
+
+div.DataBox.DataBox-Comments {
+    border-top: 1px solid rgba(0,0,0,.1);
+}
+
+textarea.TextBox.BodyBox {
+    min-height:150px;
+}
+
+div.BoxFilter.BoxQuickLinksFilter {
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+div.BoxFilter.BoxDiscussionFilter {
+    margin-bottom:10px;
+}
+
+#content a.Button {
+    color: black;
+    font-weight: normal;
+}
+
+#content input.Button {
+    color:black;
+    font-weight: normal;
+}
+
+#Form_Comment span.Back {
+    display:none;
+}
+
+.AdminCheck input {
+    display:inline;
+}
+/*
+div.editor {
+    display:none !important;
+}
+div.editor-help-text {
+    display:none !important;
+}
+
+div.editor-toolbar a span {
+    display:none;
+}
+*/
+div.InformWrapper.ModerationPending {
+    position:fixed;
+    top:50%;
+    left:50%;
+    margin-top: -50px;
+    margin-left: -175px;
+
+    padding:15px;
+}
+
+code {
+    background: #eee;
+    border: 1px solid #ddd;
+}
+
+.Author .PhotoWrap {
+    display:none;
+}
+.Tag.RoleTag {
+    background-color: #66c;
+    position:relative;
+    top:-3px;
+    margin-left:5px;
+}
+.Item.Role_Administrator {
+    background-color: rgba(0,0,200,.05);
+}
+
+.Item-Body a {
+    text-decoration: underline;
+}
+
+body.Vanilla h2, aside.page-sidebar h2 {
+    color: #666;
+    font-size: 120%;
+    margin: 5px 0;
+}
+
+body.Vanilla h1 {
+    line-height: 1.5em;
+    font-size: 140%;
+    margin: 5px 0;
+}
+body.Vanilla div.PageControls .p-1,
+body.Vanilla div.PageControls .p-2,
+body.Vanilla div.PageControls .p-3,
+body.Vanilla div.PageControls .p-4,
+body.Vanilla div.PageControls .p-5,
+body.Vanilla div.PageControls .p-6,
+body.Vanilla div.PageControls .p-7
+{
+    padding: 0 !important;
+}
+
+}
