@@ -1,4 +1,4 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php /* if (!defined('APPLICATION')) exit();
 include $this->fetchViewLocation('helper_functions');
 ?>
 <div class="table-wrap">
@@ -122,7 +122,8 @@ include $this->fetchViewLocation('helper_functions');
     </table>
 </div>
 <?php
-/*
+*/
+?>
 <?php if (!defined('APPLICATION')) exit();
 include $this->fetchViewLocation('helper_functions');
 
@@ -140,6 +141,9 @@ PagerModule::write(array('Sender' => $this, 'Limit' => 10));
         <tbody>
         <?php
         foreach ($this->data('Log') as $Row):
+            $RecordUser = Gdn::userModel()->getID($Row['RecordUserID'], DATASET_TYPE_ARRAY);
+            $RecordUserMeta = Gdn::userModel()->getMeta($RecordUser['UserID'], 'Zotero_Admin_Note');
+
             $RecordLabel = valr('Data.Type', $Row);
             if (!$RecordLabel)
                 $RecordLabel = $Row['RecordType'];
@@ -149,14 +153,20 @@ PagerModule::write(array('Sender' => $this, 'Limit' => 10));
             <tr id="<?php echo "LogID_{$Row['LogID']}"; ?>">
                 <td class="CheckboxCell"><input type="checkbox" name="LogID[]" value="<?php echo $Row['LogID']; ?>"/>
                 </td>
-                <td class="UsernameCell"><?php
+                <td class="UsernameCell">
+                    <?php
                     echo userAnchor($Row, '', 'Insert');
 
                     if (!empty($Row['OtherUserIDs'])) {
                         $OtherUserIDs = explode(',', $Row['OtherUserIDs']);
                         echo ' '.plural(count($OtherUserIDs), 'and %s other', 'and %s others').' ';
                     };
-                    ?></td>
+
+                    if ($RecordUserMeta['Zotero_Admin_Note']) {
+                        echo ' <p><span class="Tag Tag-Ban" title="' . htmlspecialchars($RecordUserMeta['Zotero_Admin_Note']) . '">Admin Note</span></p> ';
+                    }
+                    ?>
+                </td>
                 <td>
                     <?php
                     $Url = FALSE;
@@ -210,8 +220,6 @@ PagerModule::write(array('Sender' => $this, 'Limit' => 10));
 //                  echo ' ', sprintf(t('%s times'), $Row['CountGroup']);
                     }
 
-                    $RecordUser = Gdn::userModel()->getID($Row['RecordUserID'], DATASET_TYPE_ARRAY);
-
                     if ($Row['RecordName']) {
                         echo ' <span class="Meta">',
                             '<span class="Meta-Label">'.sprintf(t('%s by'), t($RecordLabel)).'</span> ',
@@ -235,7 +243,6 @@ PagerModule::write(array('Sender' => $this, 'Limit' => 10));
                                 '<span class="Meta-Label">'.t($Key).'</span> ',
                             wrap(Gdn_Format::Html($Value), 'span', array('class' => 'Meta-Value')),
                             '</span>';
-
                         }
                     }
 
@@ -254,4 +261,3 @@ PagerModule::write(array('Sender' => $this, 'Limit' => 10));
     </table>
 <?php
 PagerModule::write();
-*/
