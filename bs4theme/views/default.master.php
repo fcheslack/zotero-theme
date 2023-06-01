@@ -22,7 +22,7 @@ $libraryUrl = function($slug) use ($baseUrl) {
 	return "$baseUrl/$slug/items";
 };
 $settingsUrl = "$baseUrl/settings";
-$storageUrl = "$baseUrl/settings/storage";
+$storageUrl = $userInfo ? "$baseUrl/settings/storage" : "$baseUrl/storage";
 $groupsUrl = "$baseUrl/groups";
 $peopleUrl = "$baseUrl/people";
 $documentationUrl = "$baseUrl/support";
