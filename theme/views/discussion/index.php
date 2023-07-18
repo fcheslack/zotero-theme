@@ -1,8 +1,8 @@
 <?php if (!defined('APPLICATION')) exit();
 $Session = Gdn::session();
-if (!function_exists('WriteComment'))
+if (!function_exists('WriteComment') || !function_exists('WriteBookmarkLink')) {
     include $this->fetchViewLocation('helper_functions', 'discussion');
-
+}
 // Wrap the discussion related content in a div.
 echo '<div class="MessageList Discussion">';
 
@@ -35,7 +35,7 @@ if ($this->data('Page') == 1) {
 } else {
     echo '</div>'; // close discussion wrap
 }
-
+$this->fireEvent('ZoteroBeforeComments');
 echo '<div class="CommentsWrap">';
 
 // Write the comments.

@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) exit();?>
+
 <div class="Profile">
    <?php
    include($this->FetchViewLocation('user'));

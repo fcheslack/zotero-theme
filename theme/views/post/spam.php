@@ -5,10 +5,11 @@ echo $this->Form->errors();
 echo $this->Form->close();
 
 $Message = '<p>Posts from new users are moderated. Your message will appear after it has been approved.</p>';
-if ($this->data('DiscussionUrl'))
+if ($this->data('DiscussionUrl')) {
     $Message .= '<div>' . sprintf(t('Click <a href="%s">here</a> to go back to the discussion.') . url($this->data('DiscussionUrl'))) . '</div>';
-else
+} else {
     $Message .= '<div>' . anchor('Back to the discussions list.', 'discussions') . '</div>';
+}
 
 $this->InformMessage($Message, 'ModerationPending');
 ?>

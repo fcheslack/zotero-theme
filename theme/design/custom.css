@@ -876,9 +876,12 @@ div.InformWrapper.ModerationPending {
     left:50%;
     margin-top: -50px;
     margin-left: -175px;
+}
 
-    padding:15px;
-    font-size: larger;
+div.ModerationPending div.InformMessage {
+    background-color: #000;
+    font-size: large;
+    padding: 20px;
 }
 
 code {
@@ -918,3 +921,24 @@ code {
 .Item-Body a {
     text-decoration: underline;
 }
+
+/*Endorsed comment style*/
+.Item.EndorsedComment {
+    background-color: rgba(0,200,0,.05);
+}
+
+.DataBox-EndorsedComments {
+    margin: 1rem 0;
+    padding: 1rem;
+    /* background-color: rgba(0,0,0,.05); */
+    border: 2px solid rgba(0,0,200);
+}
+
+.DataBox-EndorsedComments .Item.EndorsedComment {
+    background-color: rgba(0,0,0,.05);
+    margin-bottom:1rem;
+}
+
+/* a.endorsedContextLink {
+    margin-top: 1rem;
+} */

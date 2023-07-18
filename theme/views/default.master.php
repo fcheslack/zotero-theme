@@ -9,7 +9,10 @@ if (isset($_COOKIE['zoteroUserInfo'])) {
 } else {
     $userInfo = false;
 }
-$displayName = (empty($userInfo['realname']) ? $userInfo['username'] : $userInfo['realname']);
+$iosApp = false;
+if(isset($_COOKIE['iosApp']) && $_COOKIE['iosApp'] == '1') {
+	$iosApp = true;
+}
 
 $staticUrl = function($path) use ($baseUrl, $staticPath) {
     return $baseUrl . $staticPath . $path;
@@ -21,7 +24,7 @@ $libraryUrl = function($slug) use ($baseUrl) {
     return "$baseUrl/$slug/items";
 };
 $settingsUrl = "$baseUrl/settings";
-$storageUrl = "$baseUrl/settings/storage";
+$storageUrl = $userInfo ? "$baseUrl/settings/storage" : "$baseUrl/storage";
 $groupsUrl = "$baseUrl/groups";
 $peopleUrl = "$baseUrl/people";
 $documentationUrl = "$baseUrl/support";
@@ -59,21 +62,25 @@ $userIsAdmin = false;
 $userIsModerator = false;
 $UserID = Gdn::Session()->UserID;
 $User = Gdn::UserModel()->GetID($UserID);
-$CountUnread = $User->CountUnreadConversations;
-$Roles = Gdn::UserModel()->GetRoles($UserID)->ResultArray();
-foreach($Roles as $role){
-    if($role['Name'] == 'Administrator'){
-        $userIsAdmin = true;
-    } elseif($role['Name'] == 'Moderator'){
-        $userIsModerator = true;
-    }
-}
-if(count($Roles) == 0){
-    $userInfo = false;
-}
+if($User) {
+    $displayName = !empty($userInfo['realname']) ? $userInfo['realname'] : $userInfo['username'];
 
-$forumNotificationPrefs = "$baseForumsUrl/profile/preferences/{$UserID}/{$userInfo['slug']}";
-$userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
+    $CountUnread = $User->CountUnreadConversations;
+    $Roles = Gdn::UserModel()->GetRoles($UserID)->ResultArray();
+    foreach($Roles as $role){
+        if($role['Name'] == 'Administrator'){
+            $userIsAdmin = true;
+        } elseif($role['Name'] == 'Moderator'){
+            $userIsModerator = true;
+        }
+    }
+    if(count($Roles) == 0){
+        $userInfo = false;
+    }
+
+    $forumNotificationPrefs = $userInfo ? "$baseForumsUrl/profile/preferences/{$UserID}" : false;
+    $userCommentsUrl = $userInfo ? "/profile/comments/{$UserID}/{$userInfo['slug']}" : false;
+}
 ?>
     <head>
         <meta charset="utf-8" />
@@ -128,7 +135,9 @@ $userCommentsUrl = "/profile/comments/{$UserID}/{$userInfo['slug']}";
             <?php endif; ?>
         </div>
         
-        <a href="<?=$baseUrl;?>/settings/storage?ref=usb" class="button" id="purchase-storage-link"><img src="<?=$staticUrl('/images/theme/archive.png')?>" /> Upgrade Storage</a>
+        <? if(!$iosApp) { ?>
+        <a href="<?=$storageUrl;?>" class="button" id="purchase-storage-link"><img src="<?=$staticUrl('/images/theme/archive.png')?>" /> Upgrade Storage</a>
+        <? } ?>
         
         <div id="navbar" class="container">
             <nav id="sitenav">

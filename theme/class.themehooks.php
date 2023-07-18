@@ -106,8 +106,10 @@ function SecondsOffset() {
  * @return string
  */
 function ZoteroRelativeTime($Timestamp = null) {
+    ZDebug("ZoteroRelativeTime: $Timestamp");
     $secondsOffset = SecondsOffset();
     $time = $Timestamp + $secondsOffset;
+    $timeObj = DateTimeImmutable::createFromFormat('U', $time);
     $NOW = time() + $secondsOffset;
 
     if (!defined('ONE_MINUTE')) {
@@ -164,11 +166,17 @@ function ZoteroRelativeTime($Timestamp = null) {
     }
 
     //more than 30 days, just print the date
+    /*
     $Format = t('Date.DefaultFormat', '%B %e, %Y');
     return strftime($Format, $Timestamp);
+    */
+    //switch to format supported by php DateTimeInterface::format
+    $Format = "F j, Y";
+    return $timeObj->format($Format);
 }
 
 function formatDateCustom($Timestamp = '', $Format = '') {
+    ZDebug("formatDateCustom: $Timestamp : $Format");
     static $GuestHourOffset;
 
     if ($Timestamp === null) {
@@ -181,6 +189,8 @@ function formatDateCustom($Timestamp = '', $Format = '') {
     $GmTimestamp = $Timestamp;
     $secondsOffset = SecondsOffset();
     $time = $Timestamp + $secondsOffset;
+    ZDebug("Creating DateTime from $Timestamp");
+    $timeObj = DateTimeImmutable::createFromFormat('U', $time);
     $Now = time() + $secondsOffset;
 
     if (!defined('ONE_DAY')) {
@@ -201,30 +211,156 @@ function formatDateCustom($Timestamp = '', $Format = '') {
         } else {
             // Otherwise, use the date format
             $Format = t('Date.DefaultFormat', '%B %e, %Y');
+            //switch to format supported by php DateTimeInterface::format
+            $Format = "F j, Y";
         }
     }
 
     $FullFormat = t('Date.DefaultDateTimeFormat', '%c');
-
-    // Emulate %l and %e for Windows.
-    if (strpos($Format, '%l') !== false) {
-        $Format = str_replace('%l', ltrim(strftime('%I', $Timestamp), '0'), $Format);
-    }
-    if (strpos($Format, '%e') !== false) {
-        $Format = str_replace('%e', ltrim(strftime('%d', $Timestamp), '0'), $Format);
-    }
+    $FullFormat = 'r'; //switch to format supported by php DateTimeInterface::format
 
     //return a relative time string if within 30 days
     if(($Now - $Timestamp) < (ONE_DAY * 30)){
         $Result = ZoteroRelativeTime($GmTimestamp);
     } else {
-        $Result = strftime($Format, $Timestamp);
+        // $Result = strftime($Format, $Timestamp);
+        $Result = $timeObj->format($Format);
     }
 
+    //for html, wrap the formatted string in an html <time> tag with the full datetime
     if ($Html) {
-        $Result = wrap($Result, 'time', array('title' => strftime($FullFormat, $time), 'datetime' => date('c', $time)));
+        // $Result = wrap($Result, 'time', array('title' => strftime($FullFormat, $time), 'datetime' => date('c', $time)));
+        $Result = wrap($Result, 'time', array('title' => $timeObj->format($FullFormat), 'datetime' => date('c', $time)));
     }
     return $Result;
 }
 
 // ==== End Custom Date Formatting Functions ====
+
+//custom WriteComment function so we can change the ID for the comment that we pull up as
+//an endorsed comment and it doesn't hijack the permalink
+// replaces WriteComment from /application/vanilla/views/discussion/helper_functions.php
+/**
+ * Outputs a formatted comment.
+ *
+ * Prior to 2.1, this also output the discussion ("FirstComment") to the browser.
+ * That has moved to the discussion.php view.
+ *
+ * @param DataSet $Comment .
+ * @param Gdn_Controller $Sender .
+ * @param Gdn_Session $Session .
+ * @param int $CurrentOffet How many comments into the discussion we are (for anchors).
+ */
+if (!function_exists('WriteComment')) {
+    function writeComment($Comment, $Sender, $Session, $CurrentOffset) {
+        static $UserPhotoFirst = NULL;
+        if ($UserPhotoFirst === null) {
+            $UserPhotoFirst = c('Vanilla.Comment.UserPhotoFirst', true);
+        }
+        $Author = Gdn::userModel()->getID($Comment->InsertUserID); //UserBuilder($Comment, 'Insert');
+        $Permalink = val('Url', $Comment, '/discussion/comment/'.$Comment->CommentID.'/#Comment_'.$Comment->CommentID);
+
+        // Set CanEditComments (whether to show checkboxes)
+        if (!property_exists($Sender, 'CanEditComments')) {
+            $Sender->CanEditComments = $Session->checkPermission('Vanilla.Comments.Edit', TRUE, 'Category', 'any') && c('Vanilla.AdminCheckboxes.Use');
+        }
+
+        // Prep event args
+        $CssClass = CssClass($Comment, $CurrentOffset);
+        $Sender->EventArguments['Comment'] = &$Comment;
+        $Sender->EventArguments['Author'] = &$Author;
+        $Sender->EventArguments['CssClass'] = &$CssClass;
+        $Sender->EventArguments['CurrentOffset'] = $CurrentOffset;
+        $Sender->EventArguments['Permalink'] = $Permalink;
+
+        // DEPRECATED ARGUMENTS (as of 2.1)
+        $Sender->EventArguments['Object'] = &$Comment;
+        $Sender->EventArguments['Type'] = 'Comment';
+
+        // First comment template event
+        $Sender->fireEvent('BeforeCommentDisplay'); ?>
+        <li class="<?php echo $CssClass; ?>" id="<?php echo 'Comment_'.$Comment->CommentID; ?>">
+            <div class="Comment">
+                <?php
+                // Write a stub for the latest comment so it's easy to link to it from outside.
+                if ($CurrentOffset == Gdn::controller()->data('_LatestItem')) {
+                    echo '<span id="latest"></span>';
+                }
+                ?>
+                <div class="Options">
+                    <?php WriteCommentOptions($Comment); ?>
+                </div>
+                <?php $Sender->fireEvent('BeforeCommentMeta'); ?>
+                <div class="Item-Header CommentHeader">
+                    <div class="AuthorWrap">
+                        <span class="Author">
+                            <?php
+                            if ($UserPhotoFirst) {
+                                echo userPhoto($Author);
+                                echo userAnchor($Author, 'Username');
+                            } else {
+                                echo userAnchor($Author, 'Username');
+                                echo userPhoto($Author);
+                            }
+                            echo FormatMeAction($Comment);
+                            $Sender->fireEvent('AuthorPhoto');
+                            ?>
+                        </span>
+                        <span class="AuthorInfo">
+                            <?php
+                            if (val('Title', $Author)) {
+                                echo ' '.WrapIf(htmlspecialchars(val('Title', $Author)), 'span', array('class' => 'MItem AuthorTitle'));
+                            }
+                            if (val('Location', $Author)) {
+                                echo ' '.WrapIf(htmlspecialchars(val('Location', $Author)), 'span', array('class' => 'MItem AuthorLocation'));
+                            }
+                            $Sender->fireEvent('AuthorInfo');
+                            ?>
+                        </span>
+                    </div>
+                    <div class="Meta CommentMeta CommentInfo">
+                        <span class="MItem DateCreated">
+                        <?php echo anchor(Gdn_Format::date($Comment->DateInserted, 'html'), $Permalink, 'Permalink', array('name' => 'Item_'.($CurrentOffset), 'rel' => 'nofollow')); ?>
+                        </span>
+                        <?php
+                        echo DateUpdated($Comment, array('<span class="MItem">', '</span>'));
+                        ?>
+                        <?php
+                        // Include source if one was set
+                        if ($Source = val('Source', $Comment)) {
+                            echo wrap(sprintf(t('via %s'), t($Source.' Source', $Source)), 'span', array('class' => 'MItem Source'));
+                        }
+
+                        $Sender->fireEvent('CommentInfo');
+                        $Sender->fireEvent('InsideCommentMeta'); // DEPRECATED
+                        $Sender->fireEvent('AfterCommentMeta'); // DEPRECATED
+
+                        // Include IP Address if we have permission
+                        if ($Session->checkPermission('Garden.PersonalInfo.View')) {
+                            echo wrap(IPAnchor($Comment->InsertIPAddress), 'span', array('class' => 'MItem IPAddress'));
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="Item-BodyWrap">
+                    <div class="Item-Body">
+                        <div class="Message">
+                            <?php
+                            echo FormatBody($Comment);
+                            ?>
+                        </div>
+                        <?php
+                        $Sender->fireEvent('AfterCommentBody');
+                        WriteReactions($Comment);
+                        if (val('Attachments', $Comment)) {
+                            WriteAttachments($Comment->Attachments);
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <?php
+        $Sender->fireEvent('AfterComment');
+    }
+}
